@@ -8,6 +8,10 @@
         , "mongodb": ""
         , "mime-magic": ""
         , "http-status": ""
+        , "redis": ""
         , "connect-redis": ""
+        , "node-uuid": ""
+        , "amqp": ">= 0.1.0"
+        , "imagemagick": ""
     }
 }
