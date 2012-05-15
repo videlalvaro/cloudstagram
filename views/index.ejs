@@ -1,12 +1,23 @@
 <html>
-<head>
-  <title>Cloudstagream</title>
-</head>
-<body>
-  <form action="/image" method="post" enctype="multipart/form-data">
-    <p>Title: <input type="text" name="title" /></p>
-    <p>Image: <input type="file" name="image" /></p>
-    <p><input type="submit" value="Upload" /></p>
-  </form>
-</body>
+  <head>
+    <title><%= title %></title>
+  </head>
+  <body>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <p>Title: <input type="text" name="title" /></p>
+      <p>Image: <input type="file" name="image" /></p>
+      <p><input type="submit" value="Upload" /></p>
+    </form>
+    <div>
+      <% if (images.length) { %>
+      <ul>
+        <% images.forEach(function(image){ %>
+        <li>
+          <img src="/image/<%= image %>"></img>
+        </li>
+        <% }) %>
+      </ul>
+      <% } %>
+    </div>
+  </body>
 </html>
