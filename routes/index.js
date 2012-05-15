@@ -1,14 +1,10 @@
-if(!Array.prototype.last) {
-    Array.prototype.last = function() {
-        return this[this.length - 1];
-    }
-}
-
-var format = require('util').format;
-var fs = require('fs');
-var mongodb = require('mongodb');
-var mime = require('mime-magic');
-var HTTPStatus = require('http-status');
+var format = require('util').format
+, fs = require('fs')
+, path = require('path')
+, mongodb = require('mongodb')
+, mime = require('mime-magic')
+, HTTPStatus = require('http-status')
+;
 
 /*
  * GET home page.
@@ -22,8 +18,6 @@ exports.index = function(req, res) {
  */
 exports.upload = function(req, res, next) {
     var tmpPath = req.files.image.path;
-    var baseName = getBasename(tmpPath);
-    console.log(baseName);
 
     mime.fileWrapper(tmpPath, function (error, mime) {
         console.log("Mime Type: ", mime);
@@ -33,12 +27,11 @@ exports.upload = function(req, res, next) {
                 if (error) {
                     console.log(error);
                 } else {
+                    db.close();
                     fs.unlink(tmpPath);
+                    console.log(data);
                     //TODO push message to RabbitMQ.
-                    readFile(db, baseName, function(error, data) {
-                        db.close();
-                        sendFile(res, data, mime, HTTPStatus.CREATED);
-                    });
+                    sendCreatedPath(res, "/images/" + data.filename);
                 }
             });
         });
@@ -50,12 +43,16 @@ function openDb(callback) {
     db.open(callback);
 }
 
+function sendCreatedPath(res, path) {
+    res.send('', {'Location': path}, HTTPStatus.CREATED);
+}
+
 function sendFile(res, data, mime, code) {
     res.send(data, { 'Content-Type': mime }, code);
 }
 
 function storeFile(db, fileName, mimeType, callback) {
-    var gs = new mongodb.GridStore(db, getBasename(fileName), "w", {
+    var gs = new mongodb.GridStore(db, path.basename(fileName), "w", {
         "content_type": mimeType,
         "chunk_size": 1024*4
     });
@@ -69,15 +66,10 @@ function storeFile(db, fileName, mimeType, callback) {
     });
 }
 
-function readFile(db, baseName, callback) {
-    mongodb.GridStore.read(db, baseName, function(error, data) {
+function readFile(db, filename, callback) {
+    mongodb.GridStore.read(db, filename, function(error, data) {
         console.log("reading file");
         console.log(error);
         callback(error, data);
     });
-}
-
-
-function getBasename(fileName) {
-    return fileName.split('/').last();   
 }
