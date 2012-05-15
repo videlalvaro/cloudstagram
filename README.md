@@ -6,3 +6,4 @@ Sample app to demo Cloudfoundry features like:
 - Session storage in Redis
 - Queueing and messaging with RabbitMQ
 - Realtime notifications with sock.js
+
