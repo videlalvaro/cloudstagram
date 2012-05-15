@@ -1,10 +1,10 @@
-
 /**
  * Module dependencies.
  */
 
 var express = require('express')
 , routes = require('./routes')
+, resize = require('./lib/resize.js')
 ;
 
 var RedisStore = require('connect-redis')(express);
@@ -40,8 +40,10 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', routes.index);
-app.post('/image', routes.upload);
+app.post('/upload', routes.upload);
+app.get('/image/:id', routes.serveFile);
 
 app.listen(3000, function(){
+    resize.startConsumers();
     console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
