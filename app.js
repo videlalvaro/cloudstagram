@@ -58,17 +58,28 @@ function restrict(req, res, next) {
     }
 }
 
+function loggedoutOnly(req, res, next) {
+    if(req.session.user) {
+        res.redirect('/');
+    } else {
+        next();
+    }
+}
+
 // Routes
 app.get('/', routes.index);
-app.get('/register', login.register);
-app.post('/register', login.addUser);
-app.get('/login', login.login);
-app.post('/login', login.auth);
-app.get('/logout', login.logout);
-
-app.post('/upload', routes.upload);
 app.get('/image/:id', routes.serveFile);
-//app.get('/images/:userid', routes.userImages);
+app.get('/images/:userid', routes.userImages);
+
+// Logged out only routes
+app.get('/register', loggedoutOnly, login.register);
+app.post('/register', loggedoutOnly, login.addUser);
+app.get('/login', loggedoutOnly, login.login);
+app.post('/login', loggedoutOnly, login.auth);
+
+// Secure routes
+app.post('/upload', restrict, routes.upload);
+app.get('/logout', restrict, login.logout);
 
 app.listen(3000, function(){
     resize.startConsumers();

@@ -40,11 +40,6 @@ function authenticate(name, pass, fn) {
 
 exports.register = function(req, res) {
     //delivers registration form
-    //TODO move this to a method run before this route
-    if (req.session.user) {
-        res.redirect('/');
-        return;
-    }
     res.render('register', { title: 'Cloudstagram - Register' });
 };
 
@@ -84,12 +79,7 @@ exports.addUser = function(req, res) {
 };
 
 exports.login = function(req, res) {
-    //serve login for
-    //TODO move this to a method run before this route
-    if (req.session.user) {
-        res.redirect('/');
-        return;
-    }
+    //serves login form
     res.render('login', { title: 'Cloudstagram - Login', error: req.session.error });
 };
 
@@ -112,6 +102,6 @@ exports.auth = function(req, res) {
 
 exports.logout = function(req, res) {
     req.session.destroy(function() {
-        res.redirect('/');
+        res.redirect('/login');
     });
 };

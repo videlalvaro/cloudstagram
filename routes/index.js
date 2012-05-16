@@ -1,5 +1,4 @@
-var format = require('util').format
-, fs = require('fs')
+var fs = require('fs')
 , path = require('path')
 , crypto = require('crypto')
 , mime = require('mime-magic')
@@ -14,11 +13,18 @@ var format = require('util').format
  * GET home page.
  */
 exports.index = function(req, res) {
-    if (typeof req.session.userid === "undefined") {
-        req.session.userid = uuid.v4();
-    }
-    user_images.getUserImages(req.session.userid, function(error, images) {
-        res.render('index', { title: 'Cloudstagram', images: images });
+    // TODO remove magick numbers. Move them to configuraion
+    var username = req.session.user ? req.session.user.name : null;
+    user_images.getLatestImages(0, 49, function(error, images) {
+        res.render('index', { title: 'Cloudstagram', images: images, username: username });
+    });
+};
+
+exports.userImages = function(req, res) {
+    var username = req.session.user ? req.session.user.name : null;
+    // TODO remove magick numbers. Move them to configuraion
+    user_images.getUserImages(req.params.userid, 0, 49, function(error, images) {
+        res.render('index', { title: 'Cloudstagram', images: images, username: username });
     });
 };
 
@@ -26,11 +32,9 @@ exports.index = function(req, res) {
  * POST handles image upload
  */
 exports.upload = function(req, res, next) {
-    //TODO if files is empty then return an error template.
     var tmpPath = req.files.image.path;
     var filename = generateNewFileName();
-    var userid = req.session.userid;
-    console.log("userid: ", userid);
+    var username = req.session.user ? req.session.user.name : null;
 
     mime.fileWrapper(tmpPath, function (error, mime) {
         image_storage.storeFile(tmpPath, filename, mime, function(error, data) {
@@ -38,17 +42,15 @@ exports.upload = function(req, res, next) {
                 console.log(error);
             } else {
                 fs.unlink(tmpPath);
-                user_images.addImageToUser(userid, data.filename);
-                thumper.publishMessage('cloudstagram-upload', {userid: userid, filename: data.filename}, '');
+                user_images.addImageToUser(username, data.filename);
+                thumper.publishMessage('cloudstagram-upload', {userid: username, filename: data.filename}, '');
                 res.redirect('/');
-                //sendCreatedPath(res, "/image/" + data.filename);
             }
         });
     });
 };
 
 exports.serveFile = function(req, res, next) {
-    console.log("userid: ", req.session.userid);
     console.log("size: ", req.param('size'));
     var filename = req.param('size') == 'small' ? 'small_' + req.params.id : req.params.id;
     image_storage.readGsFile(filename, function(error, gsData) {
