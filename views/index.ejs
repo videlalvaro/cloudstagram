@@ -1,23 +1,31 @@
-<html>
+<html lang="en">
   <head>
     <title><%= title %></title>
+    <link rel="stylesheet" media="screen" href="/stylesheets/normalize.css" >
+    <link rel="stylesheet" media="screen" href="/bootstrap/css/bootstrap.min.css" >
+    <style type="text/css">
+      .imageRow {
+        padding-bottom: 4px;
+      }
+    </style>
   </head>
   <body>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-      <p>Title: <input type="text" name="title" /></p>
-      <p>Image: <input type="file" name="image" /></p>
-      <p><input type="submit" value="Upload" /></p>
-    </form>
-    <div>
-      <% if (images.length) { %>
-      <ul>
-        <% images.forEach(function(image){ %>
-        <li>
-          <img src="/image/<%= image %>"></img>
-        </li>
-        <% }) %>
-      </ul>
-      <% } %>
+    <div class="container">
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <p>Image: <input type="file" name="image" /></p>
+        <p><input type="submit" value="Upload" /></p>
+      </form>
+      <div>
+        <% if (images.length) { %>
+          <% images.forEach(function(image, i){ %>
+            <% if (i % 4 == 0) { %> <div class="row imageRow"> <% } %>
+              <div class="span3">
+              <img src="/image/<%= image %>?size=small"></img>
+              </div>
+            <% if (i % 4 == 3) { %> </div> <% } %>
+          <% }) %>
+        <% } %>
+      </div>
     </div>
   </body>
 </html>
