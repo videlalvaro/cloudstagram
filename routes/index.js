@@ -42,7 +42,6 @@ exports.upload = function(req, res, next) {
                 console.log(error);
             } else {
                 fs.unlink(tmpPath);
-                user_images.addImageToUser(username, data.filename);
                 thumper.publishMessage('cloudstagram-upload', {userid: username, filename: data.filename}, '');
                 res.redirect('/');
             }
