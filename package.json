@@ -13,5 +13,6 @@
         , "node-uuid": ""
         , "amqp": ">= 0.1.0"
         , "imagemagick": ""
+        , "bcrypt": ""
     }
 }
