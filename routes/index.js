@@ -40,7 +40,8 @@ exports.upload = function(req, res, next) {
                 fs.unlink(tmpPath);
                 user_images.addImageToUser(userid, data.filename);
                 thumper.publishMessage('cloudstagram-upload', {userid: userid, filename: data.filename}, '');
-                sendCreatedPath(res, "/image/" + data.filename);
+                res.redirect('/');
+                //sendCreatedPath(res, "/image/" + data.filename);
             }
         });
     });
