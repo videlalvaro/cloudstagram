@@ -5,27 +5,52 @@
     <link rel="stylesheet" media="screen" href="/bootstrap/css/bootstrap.min.css" >
     <style type="text/css">
       .imageRow {
-        padding-bottom: 4px;
+          padding-bottom: 4px;
+      }
+      .container {
+          margin-top: 60px;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <form action="/upload" method="post" enctype="multipart/form-data">
-        <p>Image: <input type="file" name="image" /></p>
-        <p><input type="submit" value="Upload" /></p>
-      </form>
-      <div>
-        <% if (images.length) { %>
+      <div class='navbar navbar-fixed-top'>
+        <div class="navbar-inner">
+          <div class='nav-collapse'>
+            <ul class="nav">
+              <li>
+                <a href="/">Home</a>
+              </li>
+              <li>
+                <a href="/login">Login</a>
+              </li>
+              <li>
+                <a href="/register">Register</a>
+              </li>
+              <li>
+                <a href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <form action="/upload" method="post" enctype="multipart/form-data">
+            <p>Image: <input type="file" name="image" /></p>
+            <p><input type="submit" value="Upload" /></p>
+          </form>
+        </div>
+        <div class="row">
+          <% if (images.length) { %>
           <% images.forEach(function(image, i){ %>
-            <% if (i % 4 == 0) { %> <div class="row imageRow"> <% } %>
-              <div class="span3">
+          <% if (i % 4 == 0) { %> <div class="row imageRow"> <% } %>
+            <div class="span3">
               <img src="/image/<%= image %>?size=small"></img>
-              </div>
+            </div>
             <% if (i % 4 == 3) { %> </div> <% } %>
           <% }) %>
-        <% } %>
+          <% } %>
+        </div>
       </div>
-    </div>
   </body>
 </html>
