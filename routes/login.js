@@ -49,40 +49,38 @@ exports.register = function(req, res) {
 };
 
 exports.addUser = function(req, res) {
-    console.log("addUser: ", req.body.username, req.body.password);    
-    if (!req.session.user) {
-        var username = req.body.username, 
-        password = req.body.password;
-        var client = redis.createClient();
-        
-        client.exists(userKey(username), function(error, data) {
-            if (data != 1) {
-                var salt = generateSalt();
-                user = {
-                    name: username,
-                    salt: salt,
-                    pass: hash(password, salt)
-                };
-                client.hmset(userKey(username), user, function(error, reply) {
-                    if (reply == "OK") {
-                        req.session.regenerate(function(){
-                            client.quit();
-                            req.session.user = user;
-                            res.redirect('/');
-                        });
-                    } else {
-                        req.session.error = "Can't create user. Please try again later";
-                        res.redirect('/register');
-                    }
-                });
-            } else {
-                req.session.error = "Username: " + username + " already exists." +
-                    + "Please try again with a different user name ";
-                res.redirect('/register');
-            }
-        });
-    } 
-    res.redirect('/');
+    console.log("addUser: ", req.body.username, req.body.password);
+    var username = req.body.username, 
+    password = req.body.password;
+    var client = redis.createClient();
+    
+    client.exists(userKey(username), function(error, data) {
+        if (data != 1) {
+            var salt = generateSalt();
+            user = {
+                name: username,
+                salt: salt,
+                pass: hash(password, salt)
+            };
+            client.hmset(userKey(username), user, function(error, reply) {
+                if (reply == "OK") {
+                    client.quit();
+                    req.session.user = user;
+                    console.log("redirect after success");
+                    res.redirect('/');
+                } else {
+                    req.session.error = "Can't create user. Please try again later";
+                    console.log("redirect cannot create user");
+                    res.redirect('/register');
+                }
+            });
+        } else {
+            req.session.error = "Username: " + username + " already exists." +
+                + "Please try again with a different user name ";
+            console.log("redirect user exists");
+            res.redirect('/register');
+        }
+    });
 };
 
 exports.login = function(req, res) {
