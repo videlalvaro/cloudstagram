@@ -77,14 +77,26 @@ exports.serveFile = function(req, res, next) {
     });
 };
 
-function sendCreatedPath(res, path) {
-    res.send('', {'Location': path}, HTTPStatus.CREATED);
+exports.likeImage = function(req, res, next) {
+    var username = req.session.user.name;
+    var imageid = req.params.imageid;
+    user_images.likeImage(username, imageid, function(error, data){
+        if (error) {
+            res.send(500);
+        } else {
+            res.send(204);
+        }
+    });
 }
 
-function sendFile(res, data, mime, code) {
-    res.send(data, { 'Content-Type': mime }, code);
-}
-
-function generateNewFileName() {
-    return crypto.createHash('md5').update(uuid.v4()).digest("hex");
+exports.followUser = function(req, res, next) {
+    var from = req.session.user.name;
+    var target = req.params.userid;
+    user_interactions.followUser(from, target, function(error, data) {
+        if (error) {
+            res.send(500);
+        } else {
+            res.send(204);
+        }        
+    });
 }
