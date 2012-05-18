@@ -86,6 +86,8 @@ app.post('/login', loggedoutOnly, login.auth);
 // Secure routes
 app.post('/upload', restrict, routes.upload);
 app.get('/logout', restrict, login.logout);
+app.post('/like/:imageid', restrict, routes.likeImage);
+app.post('/follow/:userid', restrict, routes.followUser);
 
 app.listen(3000, function(){
     resize.startConsumers();
