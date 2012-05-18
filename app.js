@@ -19,7 +19,7 @@ app.configure(
         app.set('views', __dirname + '/views');
         app.set('view engine', 'ejs');
         app.set('view options', {
-            layout: false
+            layout: true
         });
         app.use(express.bodyParser());
         app.use(express.cookieParser());

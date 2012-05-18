@@ -16,7 +16,7 @@ exports.index = function(req, res) {
     // TODO remove magick numbers. Move them to configuraion
     var username = req.session.user ? req.session.user.name : null;
     user_images.getLatestImages(0, 49, function(error, images) {
-        res.render('index', { title: 'Cloudstagram', images: images, username: username });
+        res.render('image_list', { title: 'Cloudstagram', images: images, username: username });
     });
 };
 
@@ -24,7 +24,7 @@ exports.userImages = function(req, res) {
     var username = req.session.user ? req.session.user.name : null;
     // TODO remove magick numbers. Move them to configuraion
     user_images.getUserImages(req.params.userid, 0, 49, function(error, images) {
-        res.render('index', { title: 'Cloudstagram', images: images, username: username });
+        res.render('image_list', { title: 'Cloudstagram', images: images, username: username });
     });
 };
 
