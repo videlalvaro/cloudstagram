@@ -7,7 +7,20 @@ var fs = require('fs')
 , thumper = require('../lib/thumper.js')
 , image_storage = require('../lib/image_storage.js')
 , user_images = require('../lib/user_images.js')
+, user_interactions = require('../lib/user_interactions.js')
 ;
+
+function sendCreatedPath(res, path) {
+    res.send('', {'Location': path}, HTTPStatus.CREATED);
+}
+
+function sendFile(res, data, mime, code) {
+    res.send(data, { 'Content-Type': mime }, code);
+}
+
+function generateNewFileName() {
+    return crypto.createHash('md5').update(uuid.v4()).digest("hex");
+}
 
 /*
  * GET home page.
@@ -15,16 +28,16 @@ var fs = require('fs')
 exports.index = function(req, res) {
     // TODO remove magick numbers. Move them to configuraion
     var username = req.session.user ? req.session.user.name : null;
-    user_images.getLatestImages(0, 49, function(error, images) {
-        res.render('image_list', { title: 'Cloudstagram', images: images, username: username });
+    user_images.getLatestImages(0, 49, function(error, data) {
+        res.render('image_list', { title: 'Cloudstagram', data: data, username: username });
     });
 };
 
 exports.userImages = function(req, res) {
     var username = req.session.user ? req.session.user.name : null;
     // TODO remove magick numbers. Move them to configuraion
-    user_images.getUserImages(req.params.userid, 0, 49, function(error, images) {
-        res.render('image_list', { title: 'Cloudstagram', images: images, username: username });
+    user_images.getUserImages(req.params.userid, 0, 49, function(error, data) {
+        res.render('image_list', { title: 'Cloudstagram', data: data, username: username });
     });
 };
 
@@ -33,17 +46,24 @@ exports.userImages = function(req, res) {
  */
 exports.upload = function(req, res, next) {
     var tmpPath = req.files.image.path;
+    var comment = req.body.comment || "";
     var filename = generateNewFileName();
-    var username = req.session.user ? req.session.user.name : null;
+    var username = req.session.user.name;
 
     mime.fileWrapper(tmpPath, function (error, mime) {
         image_storage.storeFile(tmpPath, filename, mime, function(error, data) {
             if (error) {
                 console.log(error);
+                //TODO show error back in the form.
             } else {
                 fs.unlink(tmpPath);
-                thumper.publishMessage('cloudstagram-upload', {userid: username, filename: data.filename}, '');
-                res.redirect('/');
+                thumper.publishMessage('cloudstagram-upload', {
+                    userid: username, 
+                    filename: data.filename,
+                    comment: comment,
+                    uploaded: Date.now()
+                }, '');
+                res.redirect('back');
             }
         });
     });
