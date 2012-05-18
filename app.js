@@ -3,6 +3,7 @@
  */
 
 var express = require('express')
+, dateformat = require('dateformat')
 , routes = require('./routes') //TODO separate routes in specific controllers
 , login = require('./routes/login.js')
 , resize = require('./lib/resize.js')
