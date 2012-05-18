@@ -1,9 +1,33 @@
 <div class="row">
-  <% if (images.length) { %>
-  <% images.forEach(function(image, i){ %>
+  <% if (data.images && data.images.length) { %>
+  <% data.images.forEach(function(image, i) { %>
+  <% console.log("from template: ", image) %>
+  <% var image = JSON.parse(image); %>
   <% if (i % 4 == 0) { %> <div class="row imageRow"> <% } %>
     <div class="span3">
-      <img src="/image/<%= image %>?size=small"></img>
+      <div>
+        <span class="username"><%- usernamelink(image.username) %></span>
+        <span class="when">
+          <i class="icon-time"></i>
+          <abbr class="timeago" title="<%= dateformat(new Date(image.uploaded), 'isoDateTime') %>"><%= dateformat(new Date(image.uploaded), 'mmmm dS, yyyy') %></abbr>
+        </span>
+      </div>
+      <div>
+        <img class="userimage" src="/image/<%= image.path %>?size=small" data="<%= image.path %>"></img>
+      </div>
+      <% if(data.related[i] ) { %>
+      <div class="likes">
+        <ul>
+          <% data.related[i].forEach(function(like) { %>
+          <li><span><%- usernamelink(like) %></span></li>
+          <% }) %>
+        </ul>
+      </div>
+      <% } %>
+      <% if (image.comment) { %>
+      <div class="comments">
+      </div>
+      <% } %>
     </div>
     <% if (i % 4 == 3) { %> </div> <% } %>
   <% }) %>
