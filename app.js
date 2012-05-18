@@ -38,17 +38,6 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
 
-//Code taken from express/examples/auth/app.js
-// app.locals.use(function(req,res){
-//     var err = req.session.error
-//         , msg = req.session.success;
-//     delete req.session.error;
-//     delete req.session.success;
-//     res.locals.message = '';
-//     if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
-//     if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
-// });
-
 function restrict(req, res, next) {
     if (req.session.user) {
         next();
