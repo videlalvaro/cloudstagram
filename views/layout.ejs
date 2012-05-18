@@ -11,6 +11,9 @@
           margin-top: 60px;
       }
     </style>
+    <script type="text/javascript">
+      var loggedin = <%= loggedin(username) %>;
+    </script>
   </head>
   <body>
       <div class='navbar navbar-fixed-top'>
@@ -49,4 +52,7 @@
         <%- body %>
       </div>
   </body>
+  <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="/javascripts/jquery.timeago.js"></script>
+  <script type="text/javascript" src="/javascripts/cloudstagram.js"></script>
 </html>
