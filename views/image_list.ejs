@@ -1,0 +1,11 @@
+<div class="row">
+  <% if (images.length) { %>
+  <% images.forEach(function(image, i){ %>
+  <% if (i % 4 == 0) { %> <div class="row imageRow"> <% } %>
+    <div class="span3">
+      <img src="/image/<%= image %>?size=small"></img>
+    </div>
+    <% if (i % 4 == 3) { %> </div> <% } %>
+  <% }) %>
+  <% } %>
+</div>
