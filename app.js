@@ -13,6 +13,22 @@ var RedisStore = require('connect-redis')(express);
 
 var app = module.exports = express.createServer();
 
+app.helpers({
+    dateformat: dateformat
+});
+
+app.helpers({
+    usernamelink: function(username) {
+        return "<a href=/images/" + username + ">" + username + "</a>";
+    }
+});
+
+app.helpers({
+    loggedin: function(username) {
+        return username ? true : false;
+    }
+});
+
 // Configuration
 
 app.configure(
