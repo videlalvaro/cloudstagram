@@ -80,7 +80,7 @@ exports.serveFile = function(req, res, next) {
 exports.likeImage = function(req, res, next) {
     var username = req.session.user.name;
     var imageid = req.params.imageid;
-    user_images.likeImage(username, imageid, function(error, data){
+    user_interactions.likeImage(username, imageid, function(error, data){
         if (error) {
             res.send(500);
         } else {
