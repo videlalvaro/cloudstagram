@@ -8,6 +8,7 @@
     <div class="container">
       <form action="/register" method="post" class="well">
         <label>Register to start using Cloudstagram</label>
+        <% if (error) { %><label><%= error %></label><% } %>
         <input type="text" class="span3" placeholder="username…" name="username">
         <input type="password" class="span3" placeholder="password…" name="password">
         <input type="submit" value="Register" />

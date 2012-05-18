@@ -39,8 +39,13 @@ function authenticate(name, pass, fn) {
 }
 
 exports.register = function(req, res) {
-    //delivers registration form
-    res.render('register', { title: 'Cloudstagram - Register' });
+    var error = req.session.error;
+    delete req.session.error;
+    res.render('register', { 
+        title: 'Cloudstagram - Register',
+        error: error,
+        username: null
+    });
 };
 
 exports.addUser = function(req, res) {
@@ -51,7 +56,6 @@ exports.addUser = function(req, res) {
         var client = redis.createClient();
         
         client.exists(userKey(username), function(error, data) {
-            console.log("exists: ", data);
             if (data != 1) {
                 var salt = generateSalt();
                 user = {
@@ -67,11 +71,14 @@ exports.addUser = function(req, res) {
                             res.redirect('/');
                         });
                     } else {
-                        //TODO display error: can't create user
+                        req.session.error = "Can't create user. Please try again later";
+                        res.redirect('/register');
                     }
                 });
             } else {
-                //TODO display error: user already exists
+                req.session.error = "Username: " + username + " already exists." +
+                    + "Please try again with a different user name ";
+                res.redirect('/register');
             }
         });
     } 
@@ -79,8 +86,15 @@ exports.addUser = function(req, res) {
 };
 
 exports.login = function(req, res) {
+    var error = req.session.error;
+    delete req.session.error;
+    console.log('serving login form: ', error);
     //serves login form
-    res.render('login', { title: 'Cloudstagram - Login', error: req.session.error });
+    res.render('login', { 
+        title: 'Cloudstagram - Login', 
+        error: error,
+        username: null
+    });
 };
 
 exports.auth = function(req, res) {
@@ -93,9 +107,10 @@ exports.auth = function(req, res) {
                 res.redirect('back');
             });
         } else {
+            console.log('auth error:', err);
             req.session.error = 'Authentication failed, please check your '
                 + ' username and password.';
-            res.redirect('login');
+            res.redirect('/login');
         }
     });
 };
