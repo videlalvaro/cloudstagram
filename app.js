@@ -29,6 +29,12 @@ app.helpers({
     }
 });
 
+app.helpers({
+    loggedinuser: function(username) {
+        return username ? username : "";
+    }
+});
+
 // Configuration
 
 app.configure(
