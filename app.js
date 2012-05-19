@@ -38,12 +38,12 @@ app.configure(
         app.set('view options', {
             layout: true
         });
+        app.use(express.static(__dirname + '/public'));
         app.use(express.bodyParser());
         app.use(express.cookieParser());
         app.use(express.session({ secret: "cloudstagram secret sauce", store: new RedisStore }));
         app.use(express.methodOverride());
         app.use(app.router);
-        app.use(express.static(__dirname + '/public'));
     }
 );
 
