@@ -4,7 +4,7 @@ $(document).ready(function() {
         prefixFromNow: null,
         suffixAgo: null,
         suffixFromNow: null,
-        seconds: "%s",
+        seconds: "%ds",
         minute: "about a minute",
         minutes: "%dm",
         hour: "about an hour",
