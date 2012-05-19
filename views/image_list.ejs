@@ -1,31 +1,34 @@
 <div class="row">
   <% if (data.images && data.images.length) { %>
   <% data.images.forEach(function(image, i) { %>
-  <% console.log("from template: ", image) %>
   <% var image = JSON.parse(image); %>
   <% if (i % 4 == 0) { %> <div class="row imageRow"> <% } %>
     <div class="span3">
       <div>
-        <span class="username"><%- usernamelink(image.username) %></span>
+        <span class="username">
+          <i class="icon-user"></i>
+          <%- usernamelink(image.username) %>
+        </span>
         <span class="when">
-          <i class="icon-time"></i>
-          <abbr class="timeago" title="<%= dateformat(new Date(image.uploaded), 'isoDateTime') %>"><%= dateformat(new Date(image.uploaded), 'mmmm dS, yyyy') %></abbr>
+          <i class="icon-time"></i><abbr class="timeago" title="<%= dateformat(new Date(image.uploaded), 'isoDateTime') %>"><%= dateformat(new Date(image.uploaded), 'mmmm dS, yyyy') %></abbr>
         </span>
       </div>
       <div>
-        <img class="userimage" src="/image/<%= image.path %>?size=small" data="<%= image.path %>"></img>
+        <img class="userimage" src="/image/<%= image.path %>?size=small" data-id="<%= image.path %>" data-owner="<%= image.username %>"></img>
       </div>
-      <% if(data.related[i] ) { %>
-      <div class="likes">
-        <ul>
+      <div class="likes-container">
+        <ul id="likes-<%= image.path %>" class="likes">
+          <% if(data.related[i].length) { %>
+          <span id="heart-<%= image.path %>" class="heart"><i class="icon-heart"></i></span>
           <% data.related[i].forEach(function(like) { %>
-          <li><span><%- usernamelink(like) %></span></li>
+          <li><span id="<%= like %>-liked-<%= image.path %>"><%- usernamelink(like) %></span></li>
           <% }) %>
+          <% } %>
         </ul>
       </div>
-      <% } %>
       <% if (image.comment) { %>
-      <div class="comments">
+      <div id="comments">
+        <p><%= image.comment %></p>
       </div>
       <% } %>
     </div>

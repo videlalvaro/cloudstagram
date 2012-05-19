@@ -1,8 +1,24 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding: 50px;
 }
 
 a {
-  color: #00B7FF;
+    color: #00B7FF;
 }
+
+.imageRow {
+    padding-bottom: 4px;
+}
+.container {
+    margin-top: 60px;
+}
+
+span.when {
+    float: right;
+}
+
+span.heart { margin-right: 2px; }
+ul.likes { list-style: none; margin: 0; padding: 0; }
+ul.likes li { display: inline; }
+ul.likes li:after { content: ","; }
+ul.likes li:last-child:after { content: ""; }
