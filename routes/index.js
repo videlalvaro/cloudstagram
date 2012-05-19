@@ -70,7 +70,6 @@ exports.upload = function(req, res, next) {
 };
 
 exports.serveFile = function(req, res, next) {
-    console.log("size: ", req.param('size'));
     var filename = req.param('size') == 'small' ? 'small_' + req.params.id : req.params.id;
     image_storage.readGsFile(filename, function(error, gsData) {
         sendFile(res, gsData.binary, gsData.gsObject.contentType, HTTPStatus.OK);
