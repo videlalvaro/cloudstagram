@@ -146,9 +146,9 @@ exports.followUser = function(req, res, next) {
     var target = req.params.userid;
     user_interactions.followUser(from, target, function(error, data) {
         if (error) {
-            res.send(500);
+            res.send("KO", 500);
         } else {
-            res.send(204);
+            res.send("OK", 200);
         }        
     });
 }

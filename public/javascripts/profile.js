@@ -8,5 +8,18 @@ jQuery(document).ready(function() {
                 $("#followform").removeClass("hidden");
             }
         });
+
+        jQuery(".follow").click(function (event){
+            var userid = jQuery(event.target).attr('data-id');
+            jQuery.post('/follow/' + userid, function (data) {
+                console.log("follow result: ", data);
+                if (data == "OK") {
+                    jQuery("#followform").addClass('hidden');
+                    jQuery("#alreadyfollow").removeClass('hidden');
+                } else {
+                    console.log("follow failed");
+                }
+            })
+        });
     }
 });
