@@ -88,9 +88,7 @@ app.get('/profile/:userid', routes.userProfile);
 app.get('/latest', routes.latestImages);
 
 // Logged out only routes
-app.get('/register', loggedoutOnly, login.register);
 app.post('/register', loggedoutOnly, login.addUser);
-app.get('/login', loggedoutOnly, login.login);
 app.post('/login', loggedoutOnly, login.auth);
 
 // Secure routes

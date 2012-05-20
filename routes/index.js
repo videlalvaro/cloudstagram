@@ -27,9 +27,36 @@ function generateNewFileName() {
     return crypto.createHash('md5').update(uuid.v4()).digest("hex");
 }
 
-function getUploadForm(session) {
-    return view_helpers.renderTemplate('upload_form', {
-        session: session
+function getSideForm(session) {
+    if (session.user) {
+        return view_helpers.renderTemplate('upload_form', {
+            session: session
+        });
+    } else {
+        var forms = getUserForm(session, 'login', session.error, session.prevAction) 
+            + getUserForm(session, 'register', session.error, session.prevAction); 
+        delete session.error;
+        delete session.prevAction;
+        return forms;
+    }
+}
+
+function getUserForm(session, action, error, prevAction) {
+    var ishidden;
+    var errorMsg = action == prevAction ? error : null;
+    console.log("error: ", error, " errorMsg: ", errorMsg);
+    
+    if (typeof session.prevAction === "undefined") {
+        //if no previous action then hide register form
+        ishidden = action == "register";
+    } else {
+        ishidden = action != session.prevAction
+    }
+
+    return view_helpers.renderTemplate('user_form', {
+        action: action,
+        error: error,
+        ishidden: ishidden
     });
 }
 
@@ -49,8 +76,8 @@ exports.index = function(req, res) {
             title: 'Cloudstagram', 
             data: data, 
             username: username,
-            uploadform: getUploadForm(req.session),
-            sidemessage: getSideMessage('welcome')
+            sideform: getSideForm(req.session),
+            sidemessage: getSideMessage(req.session.user ? 'welcome' : 'welcome_visitor')
         });
     };
 
@@ -68,27 +95,16 @@ exports.latestImages = function(req, res) {
             title: 'Cloudstagram', 
             data: data, 
             username: username,
-            uploadform: getUploadForm(req.session),
+            sideform: getSideForm(req.session),
             sidemessage: getSideMessage('latest')
         });
     });
 }
 
-exports.userImages = function(req, res) {
-    var username = req.session.user ? req.session.user.name : null;
-    // TODO remove magick numbers. Move them to configuraion
-    // TODO escape userid
-    user_images.getUserImages(req.params.userid, 0, 49, function(error, data) {
-        res.render('image_list', { title: 'Cloudstagram', data: data, username: username });
-    });
-};
-
 exports.userProfile = function(req, res) {
     var username = req.session.user ? req.session.user.name : null;
     var profileUser = req.params.userid;
     
-    // TODO remove magick numbers. Move them to configuraion
-    // TODO escape userid
     user_data.getUserData(profileUser, function(error, data) {
         var info = {
             images: data[0],
@@ -107,12 +123,17 @@ exports.userProfile = function(req, res) {
             loggedinuser: view_helpers.loggedinuser
         });
 
-        res.render('profile', { 
+        var sideform = req.session.user ? null : getSideForm(req.session);
+        var sidemessage = req.session.user ? null : getSideMessage(req.session.user ? 'welcome' : 'welcome_visitor');
+
+        res.render('profile', {
             title: 'Cloudstagram', 
             data: info, 
             username: username,
             profileUser: profileUser,
-            renderedImages: renderedImages
+            renderedImages: renderedImages,
+            sideform: sideform,
+            sidemessage: sidemessage
         });
     });
 };
@@ -131,6 +152,7 @@ exports.upload = function(req, res, next) {
             if (error) {
                 console.log(error);
                 req.session.upload_error = "There was an error uploading your image";
+                req.session.prevAction = 'upload';
             } else {
                 fs.unlink(tmpPath);
                 thumper.publishMessage('cloudstagram-upload', {

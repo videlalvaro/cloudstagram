@@ -29,10 +29,10 @@
               </li>
               <% } else { %>
               <li>
-                <a href="/login">Login</a>
+                <a href="#login" class="show-form">Login</a>
               </li>
               <li>
-                <a href="/register">Register</a>
+                <a href="#register" class="show-form">Register</a>
               </li>
               <% } %>
             </ul>
@@ -49,16 +49,14 @@
         </div>
       </div>
       <div class="container content">
-        <% if (username) { %>
         <div class="row">
           <% if (locals.sidemessage) { %>
           <%- sidemessage %>
           <% } %>
-          <% if (locals.uploadform) { %>
-          <%- uploadform %>
+          <% if (locals.sideform) { %>
+          <%- sideform %>
           <% } %>
         </div>
-        <% } %>
         <%- body %>
       </div>
   </body>

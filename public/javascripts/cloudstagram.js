@@ -19,6 +19,25 @@ $(document).ready(function() {
         numbers: []
     };
     jQuery("abbr.timeago").timeago();
+
+    if (!loggedin) {
+        jQuery('.show-form').click(function (event) {
+            var elem = jQuery(event.target);
+            var action = elem.attr('href').substring(1);
+            var hide = action == 'login' ? 'register' : 'login';
+            var toHide = jQuery('#' + hide + '-form');
+            var toShow = jQuery('#' + action + '-form');
+            
+            if (!toHide.hasClass('hidden')) {
+                toHide.addClass('hidden');
+            }
+
+            if (toShow.hasClass('hidden')) {
+                toShow.removeClass('hidden');
+            }
+            event.preventDefault();
+        });
+    }
     
     if (loggedin) {
         jQuery('#upload-form').submit(function (){

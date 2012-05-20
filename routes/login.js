@@ -39,16 +39,6 @@ function authenticate(name, pass, fn) {
     });
 }
 
-exports.register = function(req, res) {
-    var error = req.session.error;
-    delete req.session.error;
-    res.render('register', { 
-        title: 'Cloudstagram - Register',
-        error: error,
-        username: null
-    });
-};
-
 exports.addUser = function(req, res) {
     console.log("addUser: ", req.body.username, req.body.password);
     var username = sanitize(req.body.username).xss();
@@ -68,31 +58,21 @@ exports.addUser = function(req, res) {
                     client.quit();
                     req.session.user = user;
                     console.log("redirect after success");
-                    res.redirect('/');
+                    res.redirect('back');
                 } else {
                     req.session.error = "Can't create user. Please try again later";
+                    req.session.prevAction = 'register';
                     console.log("redirect cannot create user");
-                    res.redirect('/register');
+                    res.redirect('back');
                 }
             });
         } else {
-            req.session.error = "Username: " + username + " already exists." +
-                + "Please try again with a different user name ";
+            req.session.error = "Username: " + username + " already exists." +                
+                "Please try again with a different user name ";
+            req.session.prevAction = 'register';
             console.log("redirect user exists");
-            res.redirect('/register');
+            res.redirect('back');
         }
-    });
-};
-
-exports.login = function(req, res) {
-    var error = req.session.error;
-    delete req.session.error;
-    console.log('serving login form: ', error);
-    //serves login form
-    res.render('login', { 
-        title: 'Cloudstagram - Login', 
-        error: error,
-        username: null
     });
 };
 
@@ -109,13 +89,14 @@ exports.auth = function(req, res) {
             console.log('auth error:', err);
             req.session.error = 'Authentication failed, please check your '
                 + ' username and password.';
-            res.redirect('/login');
+            req.session.prevAction = 'login';
+            res.redirect('back');
         }
     });
 };
 
 exports.logout = function(req, res) {
     req.session.destroy(function() {
-        res.redirect('/login');
+        res.redirect('/');
     });
 };
