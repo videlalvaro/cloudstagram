@@ -18,7 +18,7 @@
       </div>
       <div class="likes-container">
         <ul id="likes-<%= image.path %>" class="likes">
-          <% if(data.related[i].length) { %>
+          <% if(data.related && data.related[i].length) { %>
           <span id="heart-<%= image.path %>" class="heart"><i class="icon-heart"></i></span>
           <% data.related[i].forEach(function(like) { %>
           <li><span id="<%= like %>-liked-<%= image.path %>"><%- usernamelink(like) %></span></li>
