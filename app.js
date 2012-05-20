@@ -31,6 +31,12 @@ app.helpers({
     loggedinuser: view_helpers.loggedinuser
 });
 
+app.dynamicHelpers({
+    session: function(req, res){
+        return req.session;
+    }
+});
+
 // Configuration
 
 app.configure(
