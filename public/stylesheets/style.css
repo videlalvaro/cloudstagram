@@ -17,8 +17,20 @@ span.when {
     float: right;
 }
 
+.right {
+    float: right;
+}
+
 span.heart { margin-right: 2px; }
 ul.likes { list-style: none; margin: 0; padding: 0; }
 ul.likes li { display: inline; }
 ul.likes li:after { content: ","; }
 ul.likes li:last-child:after { content: ""; }
+
+#userinfo {
+    width: 600px;
+}
+
+.hidden {
+    display: none;
+}
