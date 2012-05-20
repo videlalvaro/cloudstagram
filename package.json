@@ -15,5 +15,6 @@
         , "imagemagick": ""
         , "bcrypt": ""
         , "dateformat": ""
+        , "validator": ""
     }
 }
