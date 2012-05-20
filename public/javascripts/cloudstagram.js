@@ -49,13 +49,5 @@ $(document).ready(function() {
                 console.log("liked: ", imageid);
             });
         });
-
-        jQuery(".follow").click(function (event){
-            //TODO prevent user from following already followed users
-            var userid = jQuery(event.target).attr('data-id');
-            jQuery.post('/follow/' + userid, function () {
-                console.log("followed: ", userid);
-            })
-        });
     }
 });
