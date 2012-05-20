@@ -9,6 +9,9 @@ var fs = require('fs')
 , user_images = require('../lib/user_images.js')
 , user_interactions = require('../lib/user_interactions.js')
 , user_data = require('../lib/user_data.js')
+, ejs = require('ejs')
+, view_helpers = require('../lib/view_helpers.js')
+, dateformat = require('dateformat')
 ;
 
 function sendCreatedPath(res, path) {
@@ -53,21 +56,34 @@ exports.userImages = function(req, res) {
 exports.userProfile = function(req, res) {
     var username = req.session.user ? req.session.user.name : null;
     var profileUser = req.params.userid;
+    
     // TODO remove magick numbers. Move them to configuraion
     // TODO escape userid
     user_data.getUserData(profileUser, function(error, data) {
-        console.log(data);
         var info = {
             images: data[0],
             imagesCount: data[1] || 0,
             followersCount: data[2] || 0,
             followsCount: data[3] || 0
         };
+    
+        var template = fs.readFileSync(__dirname + '/../views/image_list.ejs', 'utf8');
+        var renderedImages = ejs.render(template, {
+            data: {
+                images: data[0]
+            },
+            dateformat: dateformat,
+            usernamelink: view_helpers.usernamelink,
+            loggedin: view_helpers.loggedin,
+            loggedinuser: view_helpers.loggedinuser
+        });
+
         res.render('profile', { 
             title: 'Cloudstagram', 
             data: info, 
             username: username,
-            profileUser: profileUser
+            profileUser: profileUser,
+            renderedImages: renderedImages
         });
     });
 };

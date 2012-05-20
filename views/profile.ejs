@@ -12,7 +12,7 @@
     <span class="number"><%= data.followsCount %></span><br /><span>FOLLOWING</span>
   </div>
 </div>
-<% if (profileUser != username) { %>
+<% if (username && profileUser != username) { %>
 <div id="followactions">
   <div id="followform" class="hidden">
     <span>You are not following this user</span><button class="follow btn btn-primary" data-id="<%= profileUser %>">FOLLOW</button>
@@ -21,8 +21,9 @@
     <span>You are following this user</span><button class="follow btn btn-primary" data-id="<%= profileUser %>">FOLLOWING</button>
   </div>
 </div>
-<div id="userimages">
 <% } %>
+<div id="userimages">
+  <%- renderedImages %>
 </div>
 <script type="text/javascript">
   var profileUser = "<%= profileUser %>";
