@@ -4,6 +4,9 @@
     <link rel="stylesheet" media="screen" href="/stylesheets/normalize.css" >
     <link rel="stylesheet" media="screen" href="/bootstrap/css/bootstrap.min.css" >
     <link rel="stylesheet" media="screen" href="/stylesheets/style.css" >
+    <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.timeago.js"></script>
+    <script type="text/javascript" src="/javascripts/cloudstagram.js"></script>
     <script type="text/javascript">
       var loggedin = <%= loggedin(username) %>;
       var loggedinuser = "<%= loggedinuser(username) %>";
@@ -20,9 +23,6 @@
               <% if (username) { %>
               <li>
                 <a href="/logout">Logout</a>
-              </li>
-              <li>
-                <a href="/images/<%= username %>">Welcome <%= username %></a>
               </li>
               <% } else { %>
               <li>
@@ -46,7 +46,4 @@
         <%- body %>
       </div>
   </body>
-  <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
-  <script type="text/javascript" src="/javascripts/jquery.timeago.js"></script>
-  <script type="text/javascript" src="/javascripts/cloudstagram.js"></script>
 </html>
