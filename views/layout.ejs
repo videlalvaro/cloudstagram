@@ -50,34 +50,36 @@
       </div>
       <div class="container content">
         <% if (username) { %>
-        <div class="span8">
-          Welcome Message Here
-        </div>
-        <div id="form-container" class="container span4">
-          <form id="upload-form" class="well span4" action="/upload" method="post" enctype="multipart/form-data">
-            <fieldset>
-              <legend>Select an image to upload</legend>
-              <div id="file-control-group" class="control-group<% if (session.upload_error) { %> error<% } %>">
-                <div class="controls">
-                  <% if (session.upload_error) { %>
-                  <span id="file-upload-error" class="help-inline"><%= session.upload_error %></span>
-                  <% } %>
-                  <span id="file-error-message" class="help-inline hidden">Please select an image to upload</span>
-                  <input type="file" name="image" />
+        <div class="row">
+          <div class="span8">
+            Welcome Message Here
+          </div>
+          <div id="form-container" class="container span4">
+            <form id="upload-form" class="well span4" action="/upload" method="post" enctype="multipart/form-data">
+              <fieldset>
+                <legend>Select an image to upload</legend>
+                <div id="file-control-group" class="control-group<% if (session.upload_error) { %> error<% } %>">
+                  <div class="controls">
+                    <% if (session.upload_error) { %>
+                    <span id="file-upload-error" class="help-inline"><%= session.upload_error %></span>
+                    <% } %>
+                    <span id="file-error-message" class="help-inline hidden">Please select an image to upload</span>
+                    <input type="file" name="image" />
+                  </div>
                 </div>
-              </div>
-              <div class="control-group">
-                <label class="control-label" for="commentTextArea">Comment (<span id="charsLeft help-inline">140</span>)</label>
-                <div class="controls">
-                  <textarea class="input-xlarge" id="commentTextArea" rows="3" name="comment"></textarea>
+                <div class="control-group">
+                  <label class="control-label" for="commentTextArea">Comment (<span id="charsLeft help-inline">140</span>)</label>
+                  <div class="controls">
+                    <textarea class="input-xlarge" id="commentTextArea" rows="3" name="comment"></textarea>
+                  </div>
                 </div>
-              </div>
-              <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Upload</button>
-                <button class="btn">Cancel</button>
-              </div>
-            </fieldset>
-          </form>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Upload</button>
+                  <button class="btn">Cancel</button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
         </div>
         <% } %>
         <%- body %>

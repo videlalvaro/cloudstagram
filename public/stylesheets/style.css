@@ -27,14 +27,33 @@ ul.likes li { display: inline; }
 ul.likes li:after { content: ","; }
 ul.likes li:last-child:after { content: ""; }
 
-#userinfo {
-    width: 600px;
-}
-
 .hidden {
     display: none;
 }
 
 form.well {
     float: right;
+}
+
+.countInfo {
+    float: left;
+    margin: 2px;
+    padding: 2px;
+    text-align: center;
+    background-color: #3A87AD;
+    color: white;
+    font-weight: bold;
+    border-radius: 3px;
+    moz-border-radius: 3px;
+    webkit-border-radius: 3px;
+}
+
+div.box {
+    border-radius: 3px;
+    moz-border-radius: 3px;
+    webkit-border-radius: 3px;
+    border: 1px solid silver;
+    background-color: whiteSmoke;
+    padding: 0.3em;
+    text-align: center;
 }

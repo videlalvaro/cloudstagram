@@ -1,15 +1,17 @@
-<div id="userinfo" class="row">
-  <div class="span3">
-    <i class="icon-user"></i><span><%= profileUser %></span>
+<div id="userinfo" class="row box">
+  <div class="span6">
+    <strong>User</strong><i class="icon-user"></i><span><%= profileUser %></span>
   </div>
-  <div class="span3">
-    <span class="number"><%= data.imagesCount %></span><br /><span>PHOTOS</span>
-  </div>
-  <div class="span3">
-    <span class="number"><%= data.followersCount %></span><br /><span>FOLLOWERS</span>
-  </div>
-  <div class="span3">
-    <span class="number"><%= data.followsCount %></span><br /><span>FOLLOWING</span>
+  <div >
+    <div class="countInfo">
+      <span class="number"><%= data.imagesCount %></span><br /><span>PHOTOS</span>
+    </div>
+    <div class="countInfo">
+      <span class="number"><%= data.followersCount %></span><br /><span>FOLLOWERS</span>
+    </div>
+    <div class="countInfo">
+      <span class="number"><%= data.followsCount %></span><br /><span>FOLLOWING</span>
+    </div>
   </div>
 </div>
 <% if (username && profileUser != username) { %>
