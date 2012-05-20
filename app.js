@@ -79,6 +79,7 @@ app.get('/', routes.index);
 app.get('/image/:id', routes.serveFile);
 app.get('/images/:userid', routes.userImages);
 app.get('/profile/:userid', routes.userProfile);
+app.get('/latest', routes.latestImages);
 
 // Logged out only routes
 app.get('/register', loggedoutOnly, login.register);

@@ -32,7 +32,6 @@ function generateNewFileName() {
 exports.index = function(req, res) {
     // TODO remove magick numbers. Move them to configuraion
     var username = req.session.user ? req.session.user.name : null;
-
     var callback = function(error, data) {
         res.render('image_list', { title: 'Cloudstagram', data: data, username: username });
     };
@@ -43,6 +42,13 @@ exports.index = function(req, res) {
         user_images.getUserTimeline(username, 0, 49, callback);
     }
 };
+
+exports.latestImages = function(req, res) {
+    var username = req.session.user ? req.session.user.name : null;
+    user_images.getLatestImages(0, 49, function(error, data) {
+        res.render('image_list', { title: 'Cloudstagram', data: data, username: username });
+    });    
+}
 
 exports.userImages = function(req, res) {
     var username = req.session.user ? req.session.user.name : null;
