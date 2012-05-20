@@ -1,13 +1,14 @@
 jQuery(document).ready(function() {
     if (loggedin) {
-        jQuery.get('/isfollower/' + profileUser, function (data) {
-            console.log("isfollower: ", data);
-            if (data == "YES") {
-                $("#alreadyfollow").removeClass("hidden");
-            } else {
-                $("#followform").removeClass("hidden");
-            }
-        });
+        if (profileUser != loggedinuser) {
+            jQuery.get('/isfollower/' + profileUser, function (data) {
+                if (data == "YES") {
+                    $("#alreadyfollow").removeClass("hidden");
+                } else {
+                    $("#followform").removeClass("hidden");
+                }
+            });   
+        }
 
         jQuery(".follow").click(function (event){
             var userid = jQuery(event.target).attr('data-id');
