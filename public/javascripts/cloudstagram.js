@@ -21,6 +21,29 @@ $(document).ready(function() {
     jQuery("abbr.timeago").timeago();
     
     if (loggedin) {
+        jQuery('#upload-form').submit(function (){
+            jQuery('#file-upload-error').addClass('hidden');
+            jQuery("#file-control-group").removeClass('error');
+            
+            if (jQuery("input:file").val() == "") {
+                jQuery("#file-control-group").addClass('error');
+                jQuery("#file-error-message").removeClass('hidden');
+                return false;
+            }
+            return true;
+        });
+        
+        //TODO add register and login form validation
+
+        jQuery('#commentTextArea').keyup(function() {
+            var len = this.value.length;
+            if (len >= 140) {
+                this.value = this.value.substring(0, 140);
+            }
+            $('#charsLeft').text(140 - len);
+        });
+
+
         jQuery(".userimage").dblclick(function (event){
             var img = jQuery(event.target);
             var imageid = img.attr('data-id');

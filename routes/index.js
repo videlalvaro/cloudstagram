@@ -12,6 +12,7 @@ var fs = require('fs')
 , ejs = require('ejs')
 , view_helpers = require('../lib/view_helpers.js')
 , dateformat = require('dateformat')
+, sanitize = require('validator').sanitize
 ;
 
 function sendCreatedPath(res, path) {
@@ -99,7 +100,7 @@ exports.userProfile = function(req, res) {
  */
 exports.upload = function(req, res, next) {
     var tmpPath = req.files.image.path;
-    var comment = req.body.comment || "";
+    var comment = sanitize(req.body.comment || "").xss();
     var filename = generateNewFileName();
     var username = req.session.user.name;
 
@@ -107,7 +108,7 @@ exports.upload = function(req, res, next) {
         image_storage.storeFile(tmpPath, filename, mime, function(error, data) {
             if (error) {
                 console.log(error);
-                //TODO show error back in the form.
+                req.session.upload_error = "There was an error uploading your image";
             } else {
                 fs.unlink(tmpPath);
                 thumper.publishMessage('cloudstagram-upload', {
@@ -116,8 +117,9 @@ exports.upload = function(req, res, next) {
                     comment: comment,
                     uploaded: Date.now()
                 }, '');
-                res.redirect('back');
+                delete req.session.upload_error;
             }
+            res.redirect('back');
         });
     });
 };
