@@ -7,6 +7,8 @@ var express = require('express')
 , routes = require('./routes') //TODO separate routes in specific controllers
 , login = require('./routes/login.js')
 , resize = require('./lib/resize.js')
+, view_helpers = require('./lib/view_helpers.js')
+
 ;
 
 var RedisStore = require('connect-redis')(express);
@@ -18,21 +20,15 @@ app.helpers({
 });
 
 app.helpers({
-    usernamelink: function(username) {
-        return "<a href=/images/" + username + ">" + username + "</a>";
-    }
+    usernamelink: view_helpers.usernamelink
 });
 
 app.helpers({
-    loggedin: function(username) {
-        return username ? true : false;
-    }
+    loggedin: view_helpers.loggedin
 });
 
 app.helpers({
-    loggedinuser: function(username) {
-        return username ? username : "";
-    }
+    loggedinuser: view_helpers.loggedinuser
 });
 
 // Configuration
