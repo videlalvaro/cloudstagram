@@ -84,3 +84,5 @@ input[type=text], input[type=password]{
 .follow {
     float: right;
 }
+
+.profileLink {color:black;}
