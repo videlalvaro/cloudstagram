@@ -76,3 +76,11 @@ div.box {
 input[type=text], input[type=password]{
     height: 2em;
 }
+
+.followMsg {
+    margin-right: 2em;
+}
+
+.follow {
+    float: right;
+}

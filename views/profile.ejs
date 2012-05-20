@@ -17,10 +17,10 @@
 <% if (username && profileUser != username) { %>
 <div id="followactions" class="row-fluid box">
   <div id="followform" class="hidden">
-    <span>You are not following this user</span><button class="follow btn btn-primary" data-id="<%= profileUser %>">FOLLOW</button>
+    <span class="followMsg">You are not following this user</span><button class="follow btn btn-primary" data-id="<%= profileUser %>">FOLLOW</button>
   </div>
   <div id="alreadyfollow" class="hidden">
-    <span>You are following this user</span><button disabled class="follow btn btn-primary" data-id="<%= profileUser %>">FOLLOWING</button>
+    <span class="followMsg">You are following this user</span><button disabled class="follow btn btn-primary" data-id="<%= profileUser %>">FOLLOWING</button>
   </div>
 </div>
 <% } %>
