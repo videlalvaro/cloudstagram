@@ -27,6 +27,17 @@ function generateNewFileName() {
     return crypto.createHash('md5').update(uuid.v4()).digest("hex");
 }
 
+function getUploadForm(session) {
+    return view_helpers.renderTemplate('upload_form', {
+        session: session
+    });
+}
+
+function getSideMessage(message) {
+    return view_helpers.renderTemplate(message, {
+    });
+}
+
 /*
  * GET home page.
  */
@@ -34,7 +45,13 @@ exports.index = function(req, res) {
     // TODO remove magick numbers. Move them to configuraion
     var username = req.session.user ? req.session.user.name : null;
     var callback = function(error, data) {
-        res.render('image_list', { title: 'Cloudstagram', data: data, username: username });
+        res.render('image_list', { 
+            title: 'Cloudstagram', 
+            data: data, 
+            username: username,
+            uploadform: getUploadForm(req.session),
+            sidemessage: getSideMessage('welcome')
+        });
     };
 
     if (username == null) {
@@ -47,8 +64,14 @@ exports.index = function(req, res) {
 exports.latestImages = function(req, res) {
     var username = req.session.user ? req.session.user.name : null;
     user_images.getLatestImages(0, 49, function(error, data) {
-        res.render('image_list', { title: 'Cloudstagram', data: data, username: username });
-    });    
+        res.render('image_list', {
+            title: 'Cloudstagram', 
+            data: data, 
+            username: username,
+            uploadform: getUploadForm(req.session),
+            sidemessage: getSideMessage('latest')
+        });
+    });
 }
 
 exports.userImages = function(req, res) {
@@ -73,9 +96,8 @@ exports.userProfile = function(req, res) {
             followersCount: data[2] || 0,
             followsCount: data[3] || 0
         };
-    
-        var template = fs.readFileSync(__dirname + '/../views/image_list.ejs', 'utf8');
-        var renderedImages = ejs.render(template, {
+        
+        var renderedImages = view_helpers.renderTemplate('image_list', {
             data: {
                 images: data[0]
             },
