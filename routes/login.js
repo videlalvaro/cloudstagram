@@ -1,5 +1,6 @@
 var bcrypt = require('bcrypt')
-var redis = require('redis')
+, redis = require('redis')
+, sanitize = require('validator').sanitize
 ;
 
 function userKey(username) {
@@ -50,8 +51,8 @@ exports.register = function(req, res) {
 
 exports.addUser = function(req, res) {
     console.log("addUser: ", req.body.username, req.body.password);
-    var username = req.body.username, 
-    password = req.body.password;
+    var username = sanitize(req.body.username).xss();
+    var password = req.body.password;
     var client = redis.createClient();
     
     client.exists(userKey(username), function(error, data) {
