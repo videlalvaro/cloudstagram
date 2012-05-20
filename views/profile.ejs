@@ -1,0 +1,30 @@
+<div id="userinfo" class="row">
+  <div class="span3">
+    <i class="icon-user"></i><span><%= profileUser %></span>
+  </div>
+  <div class="span3">
+    <span class="number"><%= data.imagesCount %></span><br /><span>PHOTOS</span>
+  </div>
+  <div class="span3">
+    <span class="number"><%= data.followersCount %></span><br /><span>FOLLOWERS</span>
+  </div>
+  <div class="span3">
+    <span class="number"><%= data.followsCount %></span><br /><span>FOLLOWING</span>
+  </div>
+</div>
+<% if (profileUser != username) { %>
+<div id="followactions">
+  <div id="followform" class="hidden">
+    <span>You are not following this user</span><button class="follow btn btn-primary" data-id="<%= profileUser %>">FOLLOW</button>
+  </div>
+  <div id="alreadyfollow" class="hidden">
+    <span>You are following this user</span><button class="follow btn btn-primary" data-id="<%= profileUser %>">FOLLOWING</button>
+  </div>
+</div>
+<div id="userimages">
+<% } %>
+</div>
+<script type="text/javascript">
+  var profileUser = "<%= profileUser %>";
+</script>
+<script type="text/javascript" src="/javascripts/profile.js"></script>

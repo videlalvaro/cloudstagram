@@ -82,6 +82,7 @@ function loggedoutOnly(req, res, next) {
 app.get('/', routes.index);
 app.get('/image/:id', routes.serveFile);
 app.get('/images/:userid', routes.userImages);
+app.get('/profile/:userid', routes.userProfile);
 
 // Logged out only routes
 app.get('/register', loggedoutOnly, login.register);
@@ -93,6 +94,7 @@ app.post('/login', loggedoutOnly, login.auth);
 app.post('/upload', restrict, routes.upload);
 app.get('/logout', restrict, login.logout);
 app.post('/like/:imageid', restrict, routes.likeImage);
+app.get('/isfollower/:userid', restrict, routes.isFollower);
 app.post('/follow/:userid', restrict, routes.followUser);
 
 app.listen(3000, function(){

@@ -34,6 +34,15 @@
               <% } %>
             </ul>
           </div>
+          <% if (username) { %>
+          <div class="right">
+            <ul class="nav">
+              <li>
+                <a href="/profile/<%= username %>">My Profile</a>
+              </li>
+            </ul>
+          </div>
+          <% } %>
         </div>
       </div>
       <div class="container">

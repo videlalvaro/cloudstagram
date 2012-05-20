@@ -8,6 +8,7 @@ var fs = require('fs')
 , image_storage = require('../lib/image_storage.js')
 , user_images = require('../lib/user_images.js')
 , user_interactions = require('../lib/user_interactions.js')
+, user_data = require('../lib/user_data.js')
 ;
 
 function sendCreatedPath(res, path) {
@@ -28,16 +29,46 @@ function generateNewFileName() {
 exports.index = function(req, res) {
     // TODO remove magick numbers. Move them to configuraion
     var username = req.session.user ? req.session.user.name : null;
-    user_images.getLatestImages(0, 49, function(error, data) {
+
+    var callback = function(error, data) {
         res.render('image_list', { title: 'Cloudstagram', data: data, username: username });
-    });
+    };
+
+    if (username == null) {
+        user_images.getLatestImages(0, 49, callback);
+    } else {
+        user_images.getUserTimeline(username, 0, 49, callback);
+    }
 };
 
 exports.userImages = function(req, res) {
     var username = req.session.user ? req.session.user.name : null;
     // TODO remove magick numbers. Move them to configuraion
+    // TODO escape userid
     user_images.getUserImages(req.params.userid, 0, 49, function(error, data) {
         res.render('image_list', { title: 'Cloudstagram', data: data, username: username });
+    });
+};
+
+exports.userProfile = function(req, res) {
+    var username = req.session.user ? req.session.user.name : null;
+    var profileUser = req.params.userid;
+    // TODO remove magick numbers. Move them to configuraion
+    // TODO escape userid
+    user_data.getUserData(profileUser, function(error, data) {
+        console.log(data);
+        var info = {
+            images: data[0],
+            imagesCount: data[1] || 0,
+            followersCount: data[2] || 0,
+            followsCount: data[3] || 0
+        };
+        res.render('profile', { 
+            title: 'Cloudstagram', 
+            data: info, 
+            username: username,
+            profileUser: profileUser
+        });
     });
 };
 
@@ -97,5 +128,18 @@ exports.followUser = function(req, res, next) {
         } else {
             res.send(204);
         }        
+    });
+}
+
+exports.isFollower = function (req, res, next) {
+    var from = req.session.user.name;
+    var target = req.params.userid;
+
+    user_interactions.isFollowedBy(target, from, function (error, data) {
+        if (error) {
+            res.send(500);
+        } else {
+            res.send(data == 0 ? "NO" : "YES", 200);
+        }
     });
 }

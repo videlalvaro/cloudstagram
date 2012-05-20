@@ -52,7 +52,7 @@ $(document).ready(function() {
 
         jQuery(".follow").click(function (event){
             //TODO prevent user from following already followed users
-            var userid = jQuery(event.target).attr('data');
+            var userid = jQuery(event.target).attr('data-id');
             jQuery.post('/follow/' + userid, function () {
                 console.log("followed: ", userid);
             })
