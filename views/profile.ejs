@@ -1,4 +1,4 @@
-<div id="userinfo" class="row box">
+<div id="userinfo" class="row-fluid box">
   <div class="span6">
     <strong>User</strong><i class="icon-user"></i><span><%= profileUser %></span>
   </div>
@@ -15,7 +15,7 @@
   </div>
 </div>
 <% if (username && profileUser != username) { %>
-<div id="followactions">
+<div id="followactions" class="row-fluid box">
   <div id="followform" class="hidden">
     <span>You are not following this user</span><button class="follow btn btn-primary" data-id="<%= profileUser %>">FOLLOW</button>
   </div>
