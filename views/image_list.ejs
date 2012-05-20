@@ -1,10 +1,10 @@
-<div id="image-list" class="row box">
+<div id="image-list" class="row-fluid box">
   <% if (data.images && data.images.length) { %>
   <% data.images.forEach(function(image, i) { %>
   <% var image = JSON.parse(image); %>
-  <% if (i % 4 == 0) { %> <div class="row imageRow"> <% } %>
-    <div class="span3">
-      <div>
+  <% if (i % 4 == 0) { %> <div class="row-fluid imageRow"> <% } %>
+    <div class="span3 imagebox">
+      <div class="left-align">
         <span class="username">
           <i class="icon-user"></i>
           <%- usernamelink(image.username) %>
@@ -16,7 +16,7 @@
       <div>
         <img class="userimage" src="/image/<%= image.path %>?size=small" data-id="<%= image.path %>" data-owner="<%= image.username %>"></img>
       </div>
-      <div class="likes-container">
+      <div class="likes-container left-align">
         <ul id="likes-<%= image.path %>" class="likes">
           <% if(data.related && data.related[i].length) { %>
           <span id="heart-<%= image.path %>" class="heart"><i class="icon-heart"></i></span>
@@ -27,7 +27,7 @@
         </ul>
       </div>
       <% if (image.comment) { %>
-      <div id="comments">
+      <div id="comments" class="left-align">
         <p><%= image.comment %></p>
       </div>
       <% } %>

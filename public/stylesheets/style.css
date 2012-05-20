@@ -6,9 +6,6 @@ a {
     color: #00B7FF;
 }
 
-.imageRow {
-    padding-bottom: 4px;
-}
 .content {
     margin-top: 30px;
 }
@@ -55,5 +52,27 @@ div.box {
     border: 1px solid silver;
     background-color: whiteSmoke;
     padding: 0.3em;
+    margin-bottom: 0.3em;
+}
+
+.imageRow {
+    padding-bottom: 4px;
+}
+
+.imagebox {
+    border: 1px solid white;
+    background-color: silver;
+    border-radius: 3px;
+    moz-border-radius: 3px;
+    webkit-border-radius: 3px;
+    padding: 4px;
     text-align: center;
+}
+
+.left-align {
+    text-align: left;
+}
+
+input[type=text], input[type=password]{
+    height: 2em;
 }
