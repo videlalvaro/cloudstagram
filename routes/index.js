@@ -1,7 +1,7 @@
 var fs = require('fs')
 , path = require('path')
 , crypto = require('crypto')
-, mime = require('mime-magic')
+, mime = require('mime')
 , HTTPStatus = require('http-status')
 , uuid = require('node-uuid')
 , thumper = require('../lib/thumper.js')
@@ -141,33 +141,34 @@ exports.userProfile = function(req, res) {
  * POST handles image upload
  */
 exports.upload = function(req, res, next) {
+    var username = req.session.user.name;
     var tmpPath = req.files.image.path;
     var comment = sanitize(req.body.comment || "").xss();
-    var filename = generateNewFileName();
-    var username = req.session.user.name;
+    var mimeType = mime.lookup(tmpPath);
+    var extension = mime.extension(mimeType);
+    var filename = generateNewFileName() + "." + extension;
+    var destPath = __dirname + "/../public/uploads/" + filename;
 
-    mime.fileWrapper(tmpPath, function (error, mime) {
-        image_storage.storeFile(tmpPath, filename, mime, function(error, data) {
-            if (error) {
-                console.log(error);
-                req.session.upload_error = "There was an error uploading your image";
-                req.session.prevAction = 'upload';
-            } else {
-                console.log('upload: ', 'deleting image');
-                fs.unlink(tmpPath);
-                console.log('upload: ', 'publishing message');
-                thumper.publishMessage('cloudstagram-upload', {
-                    userid: username, 
-                    filename: data.filename,
-                    comment: comment,
-                    uploaded: Date.now()
-                }, '');
-                delete req.session.upload_error;
-            }
-            console.log('upload: ', 'redirection back');
-            res.redirect('back');
-        });
+    fs.rename(tmpPath, destPath, function(error) {
+        if (error) {
+            console.log(error);
+            req.session.upload_error = "There was an error uploading your image";
+            req.session.prevAction = 'upload';
+        } else {
+            var fileData = {
+                userid: username, 
+                filename: filename,
+                comment: comment,
+                uploaded: Date.now(),
+                mime: mimeType
+            };
+            fs.unlink(tmpPath);
+            thumper.publishMessage('cloudstagram-upload', fileData, '');
+            delete req.session.upload_error;
+        }
     });
+    console.log('upload: ', 'redirection back');
+    res.redirect('back');    
 };
 
 exports.serveFile = function(req, res, next) {

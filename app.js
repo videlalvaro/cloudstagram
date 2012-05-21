@@ -73,7 +73,10 @@ app.configure(
             layout: true
         });
         app.use(express.static(__dirname + '/public'));
-        app.use(express.bodyParser({uploadDir: __dirname + '/uploads' }));
+        app.use(express.bodyParser({
+            uploadDir: __dirname + '/uploads',
+            keepExtensions: true
+        }));
         app.use(express.cookieParser());
         app.use(express.session(getSessionOptions()));
         app.use(express.methodOverride());

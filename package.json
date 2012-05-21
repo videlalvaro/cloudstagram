@@ -6,7 +6,7 @@
         "express": "2.5.8"
         , "ejs": ""
         , "mongodb": ""
-        , "mime-magic": ""
+        , "mime": ""
         , "http-status": ""
         , "redis": ""
         , "connect-redis": ""
