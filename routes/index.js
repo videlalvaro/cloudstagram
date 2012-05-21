@@ -5,7 +5,6 @@ var fs = require('fs')
 , HTTPStatus = require('http-status')
 , uuid = require('node-uuid')
 , thumper = require('../lib/thumper.js')
-, image_storage = require('../lib/image_storage.js')
 , user_images = require('../lib/user_images.js')
 , user_interactions = require('../lib/user_interactions.js')
 , user_data = require('../lib/user_data.js')
@@ -17,10 +16,6 @@ var fs = require('fs')
 
 function sendCreatedPath(res, path) {
     res.send('', {'Location': path}, HTTPStatus.CREATED);
-}
-
-function sendFile(res, data, mime, code) {
-    res.send(data, { 'Content-Type': mime }, code);
 }
 
 function generateNewFileName() {
@@ -169,13 +164,6 @@ exports.upload = function(req, res, next) {
     });
     console.log('upload: ', 'redirection back');
     res.redirect('back');    
-};
-
-exports.serveFile = function(req, res, next) {
-    var filename = req.param('size') == 'small' ? 'small_' + req.params.id : req.params.id;
-    image_storage.readGsFile(filename, function(error, gsData) {
-        sendFile(res, gsData.binary, gsData.gsObject.contentType, HTTPStatus.OK);
-    });
 };
 
 exports.likeImage = function(req, res, next) {

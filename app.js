@@ -111,7 +111,6 @@ function loggedoutOnly(req, res, next) {
 
 // Routes
 app.get('/', routes.index);
-app.get('/image/:id', routes.serveFile);
 app.get('/profile/:userid', routes.userProfile);
 app.get('/latest', routes.latestImages);
 
@@ -126,22 +125,15 @@ app.post('/like/:imageid', restrict, routes.likeImage);
 app.get('/isfollower/:userid', restrict, routes.isFollower);
 app.post('/follow/:userid', restrict, routes.followUser);
 
-/**
- * Start the app only if connected to mongodb and rabbitmq
- */
-services.getMongoDbConnection(function(err, db) {
-    if (db) {
-        services.getRabbitMqConnection(function(conn) {
-            if (conn) {
-                app.listen(process.env.VCAP_APP_PORT || 3000, function(){
-                    resize.startConsumers();
-                    console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-                })
-            } else {
-                console.log("failed to connect to rabbitmq");
-            }
-        });
+services.getRabbitMqConnection(function(conn) {
+    if (conn) {
+        resize.startConsumers();
+        app.listen(process.env.VCAP_APP_PORT || 3000, function(){
+            console.log("Express server listening on port %d in %s mode", 
+                        app.address().port, 
+                        app.settings.env);
+        })
     } else {
-        console.log("failed to connect to mongodb: ", err);
+        console.log("failed to connect to rabbitmq");
     }
 });
