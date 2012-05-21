@@ -1,6 +1,7 @@
 var bcrypt = require('bcrypt')
 , redis = require('redis')
 , sanitize = require('validator').sanitize
+, services = require('../lib/services.js')
 ;
 
 function userKey(username) {
@@ -20,7 +21,7 @@ function generateSalt() {
 function authenticate(name, pass, fn) {
     console.log('authenticating %s:%s', name, pass);
     //get user from redis. User is a hash
-    var client = redis.createClient();
+    var client = services.getRedisClient();
     client.HGETALL([userKey(name)], function (err, obj) {
         client.quit();
         if (err || obj == null) {
@@ -43,7 +44,7 @@ exports.addUser = function(req, res) {
     console.log("addUser: ", req.body.username, req.body.password);
     var username = sanitize(req.body.username).xss();
     var password = req.body.password;
-    var client = redis.createClient();
+    var client = services.getRedisClient();
     
     client.exists(userKey(username), function(error, data) {
         if (data != 1) {

@@ -44,7 +44,6 @@ function getSideForm(session) {
 function getUserForm(session, action, error, prevAction) {
     var ishidden;
     var errorMsg = action == prevAction ? error : null;
-    console.log("error: ", error, " errorMsg: ", errorMsg);
     
     if (typeof session.prevAction === "undefined") {
         //if no previous action then hide register form

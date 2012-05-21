@@ -8,7 +8,8 @@ var express = require('express')
 , login = require('./routes/login.js')
 , resize = require('./lib/resize.js')
 , view_helpers = require('./lib/view_helpers.js')
-
+, services = require('./lib/services.js')
+, cf_utils = require('./lib/cloudFoundryUtil.js')
 ;
 
 var RedisStore = require('connect-redis')(express);
@@ -39,6 +40,19 @@ app.dynamicHelpers({
 
 // Configuration
 
+function getSessionOptions() {
+    var sessOpts = {
+        secret: "cloudstagram secret sauce",
+        store: new RedisStore(cf_utils.getRedisCredentials())
+    };
+    
+    if (process.env.stickySession && process.env.stickySession == "ON") {
+        sessOpts.key = 'csessionid';
+    }
+
+    return sessOpts;
+}
+
 app.configure(
     function() {
         app.set('views', __dirname + '/views');
@@ -49,7 +63,7 @@ app.configure(
         app.use(express.static(__dirname + '/public'));
         app.use(express.bodyParser());
         app.use(express.cookieParser());
-        app.use(express.session({ secret: "cloudstagram secret sauce", store: new RedisStore }));
+        app.use(express.session(getSessionOptions()));
         app.use(express.methodOverride());
         app.use(app.router);
     }
@@ -97,7 +111,22 @@ app.post('/like/:imageid', restrict, routes.likeImage);
 app.get('/isfollower/:userid', restrict, routes.isFollower);
 app.post('/follow/:userid', restrict, routes.followUser);
 
-app.listen(3000, function(){
-    resize.startConsumers();
-    console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+/**
+ * Start the app only if connected to mongodb and rabbitmq
+ */
+services.getMongoDbConnection(function(err, db) {
+    if (db) {
+        services.getRabbitMqConnection(function(conn) {
+            if (conn) {
+                app.listen(3000, function(){
+                    resize.startConsumers();
+                    console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+                })
+            } else {
+                console.log("failed to connect to rabbitmq");
+            }
+        });
+    } else {
+        console.log("failed to connect to mongodb: ", err);
+    }
 });
