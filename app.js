@@ -130,7 +130,7 @@ services.getMongoDbConnection(function(err, db) {
     if (db) {
         services.getRabbitMqConnection(function(conn) {
             if (conn) {
-                app.listen(3000, function(){
+                app.listen(process.env.VCAP_APP_PORT || 3000, function(){
                     resize.startConsumers();
                     console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
                 })
