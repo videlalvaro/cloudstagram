@@ -41,9 +41,17 @@ app.dynamicHelpers({
 // Configuration
 
 function getSessionOptions() {
+    var cf_creds = cf_utils.getRedisCredentials();
+    
+    var redisCreds = {
+        host: cf_creds.host,
+        port: cf_creds.port,
+        pass: cf_creds.password
+    };
+
     var sessOpts = {
         secret: "cloudstagram secret sauce",
-        store: new RedisStore(cf_utils.getRedisCredentials())
+        store: new RedisStore(redisCreds)
     };
     
     if (process.env.stickySession && process.env.stickySession == "ON") {
