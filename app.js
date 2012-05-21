@@ -44,14 +44,18 @@ function getSessionOptions() {
     var cf_creds = cf_utils.getRedisCredentials();
     
     var redisCreds = {
-        host: cf_creds.host,
+        host: cf_creds.hostname,
         port: cf_creds.port,
         pass: cf_creds.password
     };
 
+    var redisOpts = {
+        client: services.getRedisClient();  
+    };
+
     var sessOpts = {
         secret: "cloudstagram secret sauce",
-        store: new RedisStore(redisCreds)
+        store: new RedisStore(redisOpts)
     };
     
     if (process.env.stickySession && process.env.stickySession == "ON") {
