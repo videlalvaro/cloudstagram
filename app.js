@@ -50,7 +50,7 @@ function getSessionOptions() {
     };
 
     var redisOpts = {
-        client: services.getRedisClient();  
+        client: services.getRedisClient()
     };
 
     var sessOpts = {
