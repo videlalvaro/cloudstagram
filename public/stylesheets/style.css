@@ -86,3 +86,8 @@ input[type=text], input[type=password]{
 }
 
 .profileLink {color:black;}
+
+img.userimage {
+    height: 250px;
+    width: 250px;
+}

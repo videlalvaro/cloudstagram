@@ -144,6 +144,8 @@ exports.upload = function(req, res, next) {
     var filename = generateNewFileName() + "." + extension;
     var destPath = __dirname + "/../public/uploads/" + filename;
 
+    console.log(tmpPath, destPath, filename);
+
     fs.rename(tmpPath, destPath, function(error) {
         if (error) {
             console.log(error);
@@ -158,7 +160,10 @@ exports.upload = function(req, res, next) {
                 mime: mimeType
             };
             fs.unlink(tmpPath);
-            thumper.publishMessage('cloudstagram-upload', fileData, '');
+            //TODO if the image needs to be resized then the routing key 
+            // must be the instance hostname
+            thumper.publishMessage('cloudstagram-new-image', fileData, '');
+//            thumper.publishMessage('cloudstagram-upload', fileData, '');
             delete req.session.upload_error;
         }
     });
