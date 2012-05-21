@@ -153,7 +153,9 @@ exports.upload = function(req, res, next) {
                 req.session.upload_error = "There was an error uploading your image";
                 req.session.prevAction = 'upload';
             } else {
+                console.log('upload: ', 'deleting image');
                 fs.unlink(tmpPath);
+                console.log('upload: ', 'publishing message');
                 thumper.publishMessage('cloudstagram-upload', {
                     userid: username, 
                     filename: data.filename,
@@ -162,6 +164,7 @@ exports.upload = function(req, res, next) {
                 }, '');
                 delete req.session.upload_error;
             }
+            console.log('upload: ', 'redirection back');
             res.redirect('back');
         });
     });
