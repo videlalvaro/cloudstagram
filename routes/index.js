@@ -146,6 +146,7 @@ exports.upload = function(req, res, next) {
         if (error) {
             console.log(error);
             req.session.upload_error = "There was an error uploading your image";
+            req.flash('error', "There was an error uploading your image");
             req.session.prevAction = 'upload';
         } else {
             var fileData = {
@@ -158,10 +159,12 @@ exports.upload = function(req, res, next) {
             fs.unlink(tmpPath);
             thumper.publishMessage('cloudstagram-new-image', fileData, '');
             delete req.session.upload_error;
+            req.flash('success', "The image was uploaded succesfully"
+                      + " and is being processed by our services");
         }
-    });
-    console.log('upload: ', 'redirecting back');
-    res.redirect('back');    
+        console.log('upload: ', 'redirecting back');
+        res.redirect('back')
+    });    
 };
 
 exports.likeImage = function(req, res, next) {

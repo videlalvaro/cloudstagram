@@ -20,6 +20,10 @@ $(document).ready(function() {
     };
     jQuery("abbr.timeago").timeago();
 
+    jQuery("button.close").click(function (event) {
+        jQuery(event.target).parent().remove();
+    });
+
     if (!loggedin) {
         jQuery('.show-form').click(function (event) {
             var elem = jQuery(event.target);

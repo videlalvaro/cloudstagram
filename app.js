@@ -37,6 +37,21 @@ app.helpers({
 app.dynamicHelpers({
     session: function(req, res){
         return req.session;
+    },
+
+    flashMessages: function(req, res){
+        var html = ""
+        , flash  = req.flash();
+        ['error', 'info', 'success'].forEach(function(type) {
+            if(flash[type]) {
+                flash[type].forEach(function(message) {
+                    html += "<div class='alert alert-" + type + "'>" 
+                        + "<button class='close' data-dismiss='alert'>×</button>"
+                        + message + "</div>";
+                    });
+            }
+        });
+        return html == "" ? "" : "<div class='row'>" + html + "</div>";
     }
 });
 
