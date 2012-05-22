@@ -2,9 +2,9 @@ var fs = require('fs')
 , path = require('path')
 , crypto = require('crypto')
 , mime = require('mime')
-, HTTPStatus = require('http-status')
 , uuid = require('node-uuid')
 , thumper = require('../lib/thumper.js')
+, image_storage = require('../lib/image_storage.js')
 , user_images = require('../lib/user_images.js')
 , user_interactions = require('../lib/user_interactions.js')
 , user_data = require('../lib/user_data.js')
@@ -13,10 +13,6 @@ var fs = require('fs')
 , dateformat = require('dateformat')
 , sanitize = require('validator').sanitize
 ;
-
-function sendCreatedPath(res, path) {
-    res.send('', {'Location': path}, HTTPStatus.CREATED);
-}
 
 function generateNewFileName() {
     return crypto.createHash('md5').update(uuid.v4()).digest("hex");
@@ -146,7 +142,7 @@ exports.upload = function(req, res, next) {
 
     console.log(tmpPath, destPath, filename);
 
-    fs.rename(tmpPath, destPath, function(error) {
+    image_storage.storeFile(tmpPath, filename, mimeType, function (error, data) {
         if (error) {
             console.log(error);
             req.session.upload_error = "There was an error uploading your image";
@@ -160,14 +156,11 @@ exports.upload = function(req, res, next) {
                 mime: mimeType
             };
             fs.unlink(tmpPath);
-            //TODO if the image needs to be resized then the routing key 
-            // must be the instance hostname
             thumper.publishMessage('cloudstagram-new-image', fileData, '');
-//            thumper.publishMessage('cloudstagram-upload', fileData, '');
             delete req.session.upload_error;
         }
     });
-    console.log('upload: ', 'redirection back');
+    console.log('upload: ', 'redirecting back');
     res.redirect('back');    
 };
 

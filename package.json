@@ -15,5 +15,6 @@
         , "dateformat": ""
         , "validator": ""
         , "cloudfoundry": ""
+        , "mongodb": ""
     }
 }

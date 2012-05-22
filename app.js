@@ -4,15 +4,17 @@
 
 var express = require('express')
 , dateformat = require('dateformat')
-, routes = require('./routes') //TODO separate routes in specific controllers
+, routes = require('./routes')
 , login = require('./routes/login.js')
+, fileServe = require('./routes/fileServe.js')
 , resize = require('./lib/resize.js')
 , view_helpers = require('./lib/view_helpers.js')
 , services = require('./lib/services.js')
 , cf_utils = require('./lib/cloudFoundryUtil.js')
+, RedisStore = require('connect-redis')(express);
 ;
 
-var RedisStore = require('connect-redis')(express);
+
 
 var app = module.exports = express.createServer();
 
@@ -41,14 +43,6 @@ app.dynamicHelpers({
 // Configuration
 
 function getSessionOptions() {
-    var cf_creds = cf_utils.getRedisCredentials();
-    
-    var redisCreds = {
-        host: cf_creds.hostname,
-        port: cf_creds.port,
-        pass: cf_creds.password
-    };
-
     var redisOpts = {
         client: services.getRedisClient()
     };
@@ -111,6 +105,7 @@ function loggedoutOnly(req, res, next) {
 
 // Routes
 app.get('/', routes.index);
+app.get('/image/:id', fileServe.serveFile);
 app.get('/profile/:userid', routes.userProfile);
 app.get('/latest', routes.latestImages);
 
@@ -125,15 +120,21 @@ app.post('/like/:imageid', restrict, routes.likeImage);
 app.get('/isfollower/:userid', restrict, routes.isFollower);
 app.post('/follow/:userid', restrict, routes.followUser);
 
-services.getRabbitMqConnection(function(conn) {
-    if (conn) {
-        resize.startConsumers();
-        app.listen(process.env.VCAP_APP_PORT || 3000, function(){
-            console.log("Express server listening on port %d in %s mode", 
-                        app.address().port, 
-                        app.settings.env);
-        })
+services.getMongoDbConnection(function(err, db) {
+    if (db) {
+        services.getRabbitMqConnection(function(conn) {
+            if (conn) {
+                resize.startConsumers();
+                app.listen(process.env.VCAP_APP_PORT || 3000, function(){
+                    console.log("Express server listening on port %d in %s mode", 
+                                app.address().port, 
+                                app.settings.env);
+                })
+            } else {
+                console.log("failed to connect to rabbitmq");
+            }
+        });
     } else {
-        console.log("failed to connect to rabbitmq");
+        console.log("failed to connect to mongodb");
     }
 });
