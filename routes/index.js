@@ -145,7 +145,7 @@ exports.upload = function(req, res, next) {
         if (error) {
             console.log(error);
             req.session.upload_error = "There was an error uploading your image";
-            req.flash('error', "There was an error uploading your image");
+            req.flash('error', "There was an error uploading your image|upload-" + unique);
             req.session.prevAction = 'upload';
         } else {
             var fileData = {
