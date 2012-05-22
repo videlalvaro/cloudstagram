@@ -42,12 +42,14 @@ app.dynamicHelpers({
     flashMessages: function(req, res){
         var html = ""
         , flash  = req.flash();
+        console.log("flash: ", flash);
         ['error', 'info', 'success'].forEach(function(type) {
             if(flash[type]) {
-                flash[type].forEach(function(message) {
+                flash[type].forEach(function(data) {
+                    var parts = data.split('|');
                     html += "<div class='alert alert-" + type + "'>" 
-                        + "<button class='close' data-dismiss='alert'>×</button>"
-                        + message + "</div>";
+                        + "<button id='" + parts[1] + "'class='close' data-dismiss='alert'>×</button>"
+                        + parts[0] + "</div>";
                     });
             }
         });

@@ -137,10 +137,9 @@ exports.upload = function(req, res, next) {
     var comment = sanitize(req.body.comment || "").xss();
     var mimeType = mime.lookup(tmpPath);
     var extension = mime.extension(mimeType);
-    var filename = generateNewFileName() + "." + extension;
+    var unique = generateNewFileName();
+    var filename = unique + "." + extension;
     var destPath = __dirname + "/../public/uploads/" + filename;
-
-    console.log(tmpPath, destPath, filename);
 
     image_storage.storeFile(tmpPath, filename, mimeType, function (error, data) {
         if (error) {
@@ -159,8 +158,8 @@ exports.upload = function(req, res, next) {
             fs.unlink(tmpPath);
             thumper.publishMessage('cloudstagram-new-image', fileData, '');
             delete req.session.upload_error;
-            req.flash('success', "The image was uploaded succesfully"
-                      + " and is being processed by our services");
+            req.flash('success', "The image was uploaded succesfully "
+                      + "and is being processed by our services|upload-" + unique);
         }
         console.log('upload: ', 'redirecting back');
         res.redirect('back')
