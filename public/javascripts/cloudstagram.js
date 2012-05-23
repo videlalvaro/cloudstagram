@@ -87,8 +87,7 @@ jQuery(document).ready(function() {
         jQuery(".userimage").dblclick(likeImage);
     };
 
-    //TODO use VCAP port
-    var sock = new SockJS('http://localhost:3000/broadcast');
+    var sock = new SockJS('http://' + window.location.host +'/broadcast');
     sock.onopen = function (event) {
         var username = loggedin ? loggedinuser : "anon";
         sock.send('auth|'+ username);
