@@ -1,4 +1,4 @@
-<div class="span3 imagebox">
+<div class="imagebox">
   <div class="left-align">
     <span class="username">
       <i class="icon-user"></i>
@@ -17,12 +17,12 @@
       <span id="heart-<%= image.path %>" class="heart"><i class="icon-heart"></i></span>
       <% data.related[i].forEach(function(like) { %>
       <li><span id="<%= like %>-liked-<%= image.path %>"><%- usernamelink(like) %></span></li>
-      <% }) %>
-      <% } %>
+          <% }) %>
+          <% } %>
     </ul>
   </div>
   <% if (image.comment) { %>
-  <div id="comments" class="left-align">
+  <div class="comment left-align">
     <p><%= image.comment %></p>
   </div>
   <% } %>

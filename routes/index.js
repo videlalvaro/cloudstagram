@@ -67,7 +67,8 @@ exports.index = function(req, res) {
             data: data, 
             username: username,
             sideform: getSideForm(req.session),
-            sidemessage: getSideMessage(req.session.user ? 'welcome' : 'welcome_visitor')
+            sidemessage: getSideMessage(req.session.user ? 'welcome' : 'welcome_visitor'),
+            imageBoxTemplate: view_helpers.getImageBoxTemplate()
         });
     };
 
@@ -86,7 +87,8 @@ exports.latestImages = function(req, res) {
             data: data, 
             username: username,
             sideform: getSideForm(req.session),
-            sidemessage: getSideMessage('latest')
+            sidemessage: getSideMessage('latest'),
+            imageBoxTemplate: view_helpers.getImageBoxTemplate()
         });
     });
 }
@@ -110,7 +112,8 @@ exports.userProfile = function(req, res) {
             dateformat: dateformat,
             usernamelink: view_helpers.usernamelink,
             loggedin: view_helpers.loggedin,
-            loggedinuser: view_helpers.loggedinuser
+            loggedinuser: view_helpers.loggedinuser,
+            imageBoxTemplate: view_helpers.getImageBoxTemplate()
         });
 
         var sideform = req.session.user ? null : getSideForm(req.session);
