@@ -113,7 +113,8 @@ exports.userProfile = function(req, res) {
             usernamelink: view_helpers.usernamelink,
             loggedin: view_helpers.loggedin,
             loggedinuser: view_helpers.loggedinuser,
-            imageBoxTemplate: view_helpers.getImageBoxTemplate()
+            imageBoxTemplate: view_helpers.getImageBoxTemplate(),
+            ejs: ejs
         });
 
         var sideform = req.session.user ? null : getSideForm(req.session);
