@@ -16,5 +16,6 @@
         , "validator": ""
         , "cloudfoundry": ""
         , "mongodb": ""
+        , "sockjs": "0.3"
     }
 }
