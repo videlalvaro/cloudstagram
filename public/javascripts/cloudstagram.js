@@ -52,6 +52,7 @@ jQuery(document).ready(function() {
         switch(parts[0]) {
           case 'auth':
             console.log('connected to sockjs');
+            jQuery('#upload-button').removeAttr('disabled');
             break;
           case 'new_pic':
             var img = JSON.parse(parts[1]);
