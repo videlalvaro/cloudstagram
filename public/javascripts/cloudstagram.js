@@ -80,7 +80,7 @@ jQuery(document).ready(function() {
         isAnimated: true
     });
 
-    function renderTempalte(template, options) {
+    function renderImage(template, options) {
         var html = require('ejs').render(template, options);
         $('#image-list').prepend(html).masonry('reload');
         jQuery("abbr.timeago").timeago();
@@ -103,6 +103,12 @@ jQuery(document).ready(function() {
             break;
           case 'new_pic':
             var img = JSON.parse(parts[1]);
+
+            //if the image is present don't append it
+            if(jQuery('#box-' + img.filename).length != 0) {
+                 break;
+            }
+
             var templateOptions = {
                 image: {
                     path: img.filename,
@@ -117,10 +123,10 @@ jQuery(document).ready(function() {
             //TODO fade away the upload confirmation since we don't need it now that 
             // we display the actual image
             if (imageBoxTemplate) {
-                renderTempalte(imageBoxTemplate, templateOptions);
+                renderImage(imageBoxTemplate, templateOptions);
             } else {
                 jQuery.get('/javascripts/image_box.ejs', function(imageBoxTemplate) {
-                    renderTempalte(imageBoxTemplate, templateOptions);
+                    renderImage(imageBoxTemplate, templateOptions);
                 });
             }
             break
