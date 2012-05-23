@@ -11,12 +11,17 @@ var express = require('express')
 , view_helpers = require('./lib/view_helpers.js')
 , services = require('./lib/services.js')
 , cf_utils = require('./lib/cloudFoundryUtil.js')
-, RedisStore = require('connect-redis')(express);
+, RedisStore = require('connect-redis')(express)
+, ejs = require('ejs')
 ;
 
-
-
 var app = module.exports = express.createServer();
+
+var broadcast = require('./lib/broadcast')();
+broadcast.installHandlers(app, {
+    prefix: '/broadcast',
+    sockjs_url: '/javascripts/sockjs-0.3.js'
+});
 
 app.helpers({
     dateformat: dateformat
@@ -35,6 +40,10 @@ app.helpers({
 });
 
 app.dynamicHelpers({
+    ejs: function(req, res) {
+        return ejs;
+    },
+
     session: function(req, res){
         return req.session;
     },
@@ -42,7 +51,6 @@ app.dynamicHelpers({
     flashMessages: function(req, res){
         var html = ""
         , flash  = req.flash();
-        console.log("flash: ", flash);
         ['error', 'info', 'success'].forEach(function(type) {
             if(flash[type]) {
                 flash[type].forEach(function(data) {
@@ -66,12 +74,9 @@ function getSessionOptions() {
 
     var sessOpts = {
         secret: "cloudstagram secret sauce",
-        store: new RedisStore(redisOpts)
+        store: new RedisStore(redisOpts),
+        key: 'jsessionid'
     };
-    
-    if (process.env.stickySession && process.env.stickySession == "ON") {
-        sessOpts.key = 'csessionid';
-    }
 
     return sessOpts;
 }
@@ -141,7 +146,7 @@ services.getMongoDbConnection(function(err, db) {
     if (db) {
         services.getRabbitMqConnection(function(conn) {
             if (conn) {
-                resize.startConsumers();
+                resize.startConsumers(broadcast);
                 app.listen(process.env.VCAP_APP_PORT || 3000, function(){
                     console.log("Express server listening on port %d in %s mode", 
                                 app.address().port, 

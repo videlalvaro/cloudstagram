@@ -1,4 +1,4 @@
-$(document).ready(function() {
+jQuery(document).ready(function() {
     jQuery.timeago.settings.strings = {
         prefixAgo: null,
         prefixFromNow: null,
@@ -23,6 +23,63 @@ $(document).ready(function() {
     jQuery("button.close").click(function (event) {
         jQuery(event.target).parent().remove();
     });
+    
+    var imageList = $('#image-list');
+
+    imageList.masonry({
+        itemSelector : '.imagebox',
+        columnWidth : 240,
+        isAnimated: true
+    });
+
+    var imageBoxTemplate;
+
+    function renderTempalte(template, options) {
+        var html = require('ejs').render(template, options);
+        imageList.prepend(html).masonry('reload');
+        jQuery("abbr.timeago").timeago();
+    };
+
+    //TODO use VCAP port
+    var sock = new SockJS('http://localhost:3000/broadcast');
+    sock.onopen = function (event) {
+        var username = loggedin ? loggedinuser : "anon";
+        sock.send('auth|'+ username);
+    };
+    sock.onmessage = function (event) {
+        console.log("onmessage: ", event.data);
+        var parts = event.data.split('|');
+        switch(parts[0]) {
+          case 'auth':
+            console.log('connected to sockjs');
+            break;
+          case 'new_pic':
+            var img = JSON.parse(parts[1]);
+            var templateOptions = {
+                image: {
+                    path: img.filename,
+                    comment: img.comment,
+                    username: img.userid,
+                    uploaded: img.uploaded,
+                },
+                data: {}
+            };
+
+            // We do it this way so we can cache the template.
+            //TODO fade away the upload confirmation since we don't need it now that 
+            // we display the actual image
+            if (imageBoxTemplate) {
+                renderTempalte(imageBoxTemplate, templateOptions);
+            } else {
+                jQuery.get('/javascripts/image_box.ejs', function(imageBoxTemplate) {
+                    renderTempalte(imageBoxTemplate, templateOptions);
+                });
+            }
+            break
+        default:
+            console.log('got sockjs message: ', event.data);
+        }
+    };
 
     if (!loggedin) {
         jQuery('.show-form').click(function (event) {
@@ -44,26 +101,44 @@ $(document).ready(function() {
     }
     
     if (loggedin) {
-        jQuery('#upload-form').submit(function (){
-            jQuery('#file-upload-error').addClass('hidden');
-            jQuery("#file-control-group").removeClass('error');
-            
-            if (jQuery("input:file").val() == "") {
-                jQuery("#file-control-group").addClass('error');
-                jQuery("#file-error-message").removeClass('hidden');
-                return false;
+        jQuery('#upload-form').ajaxForm({
+            beforeSubmit: function (){
+                jQuery('#file-upload-error').addClass('hidden');
+                jQuery("#file-control-group").removeClass('error');
+                if (jQuery("input:file").val() == "") {
+                    jQuery("#file-control-group").addClass('error');
+                    jQuery("#file-error-message").removeClass('hidden');
+                    return false;
+                }
+                
+                jQuery('#upload-button').attr('disabled', 'disabled');
+                return true;
+            },
+            success: function (data) {
+                var parts = data.split('|');
+                var html = "<div id='" + parts[2] + "' class='alert alert-" + parts[0] + "'>" 
+                    + "<button class='close' data-dismiss='alert'>×</button>"
+                    + parts[1] + "</div>";
+                
+                jQuery("#info-box").prepend(html);
+                jQuery("#" + parts[2]).click(function (){
+                    jQuery(this).remove();
+                });
+
+                document.getElementById('upload-form').reset();
+                jQuery('#upload-button').removeAttr('disabled');
             }
-            return true;
         });
         
         //TODO add register and login form validation
 
-        jQuery('#commentTextArea').keyup(function() {
+        jQuery('#image-comment').keyup(function() {
             var len = this.value.length;
             if (len >= 140) {
                 this.value = this.value.substring(0, 140);
             }
-            $('#charsLeft').text(140 - len);
+            var charsLeft = 140 - len;
+            jQuery('#charsLeft').text('(' + charsLeft + ')');
         });
 
 

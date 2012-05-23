@@ -8,17 +8,17 @@
           <span id="file-upload-error" class="help-inline"><%= session.upload_error %></span>
           <% } %>
           <span id="file-error-message" class="help-inline hidden">Please select an image to upload</span>
-          <input type="file" name="image" />
+          <input id="image-file" type="file" name="image" />
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label" for="commentTextArea">Comment (<span id="charsLeft help-inline">140</span>)</label>
+        <label class="control-label" for="image-comment">Comment <span id="charsLeft" class=" help-inline">(140)</span></label>
         <div class="controls">
-          <textarea class="input-xlarge" id="commentTextArea" rows="3" name="comment"></textarea>
+          <textarea class="input-xlarge" id="image-comment" rows="3" name="comment"></textarea>
         </div>
       </div>
       <div>
-        <button type="submit" class="btn btn-primary">Upload</button>
+        <button id="upload-button" type="submit" class="btn btn-primary">Upload</button>
       </div>
     </fieldset>
   </form>
