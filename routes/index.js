@@ -154,8 +154,7 @@ exports.upload = function(req, res, next) {
                 comment: comment,
                 uploaded: Date.now(),
                 mime: mimeType
-            };
-            fs.unlink(tmpPath);
+            };            
             thumper.publishMessage('cloudstagram-new-image', fileData, '');
             delete req.session.upload_error;
             var response = "success|The image was uploaded succesfully "
@@ -163,6 +162,7 @@ exports.upload = function(req, res, next) {
             var code = 201;
         }
         console.log('upload success');
+        fs.unlink(tmpPath);
         res.send(response, code);
     });    
 };

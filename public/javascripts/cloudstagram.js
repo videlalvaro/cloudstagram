@@ -1,7 +1,7 @@
 jQuery(document).ready(function() {
     var imageBoxTemplate;
 
-    var likeImage = function (event){
+    var likeImage = function(event){
         var img = jQuery(event.target);
         var imageid = img.attr('data-id');
         
@@ -31,6 +31,23 @@ jQuery(document).ready(function() {
             $('#image-list').masonry('reload');
         });
     };
+
+    function displayAlert(id, type, message) {
+        var html = "<div id='" + id + "' class='alert alert-" + type + "'>" 
+            + "<button class='close' data-dismiss='alert'>×</button>"
+            + message + "</div>";
+
+        jQuery("#info-box").prepend(html);
+        jQuery("#" + id).click(function (){
+            jQuery(this).remove();
+        })
+    }
+    
+    function notifyUploadResult(id, type, message) {
+        displayAlert(id, type, message);
+        document.getElementById('upload-form').reset();
+        jQuery('#upload-button').removeAttr('disabled');
+    }
 
     jQuery.timeago.settings.strings = {
         prefixAgo: null,
@@ -130,7 +147,7 @@ jQuery(document).ready(function() {
             event.preventDefault();
         });
     }
-    
+
     if (loggedin) {
         jQuery('#upload-form').ajaxForm({
             beforeSubmit: function (){
@@ -145,23 +162,24 @@ jQuery(document).ready(function() {
                 jQuery('#upload-button').attr('disabled', 'disabled');
                 return true;
             },
-            success: function (data) {
+            success: function (data, statusText) {
+                console.log('statusText: ', statusText);
                 var parts = data.split('|');
-                var html = "<div id='" + parts[2] + "' class='alert alert-" + parts[0] + "'>" 
-                    + "<button class='close' data-dismiss='alert'>×</button>"
-                    + parts[1] + "</div>";
-                
-                jQuery("#info-box").prepend(html);
-                jQuery("#" + parts[2]).click(function (){
-                    jQuery(this).remove();
-                });
 
-                document.getElementById('upload-form').reset();
-                jQuery('#upload-button').removeAttr('disabled');
+                notifyUploadResult(parts[2], parts[0], parts[1]);
+            },
+            error: function(response, status, err){
+                var parts = response.responseText.split('|');
+                if (parts.length == 3) {
+                    //if known error use info from server
+                    notifyUploadResult(parts[2], parts[0], parts[1]);
+                } else {
+                    notifyUploadResult('upload-error', 'error', 
+                                       'There was an error while uploading your picture. '
+                                       + 'Please try again later.');    
+                }
             }
         });
-        
-        //TODO add register and login form validation
 
         jQuery('#image-comment').keyup(function() {
             var len = this.value.length;
