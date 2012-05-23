@@ -1,4 +1,37 @@
 jQuery(document).ready(function() {
+    var imageBoxTemplate;
+
+    var likeImage = function (event){
+        var img = jQuery(event.target);
+        var imageid = img.attr('data-id');
+        
+        if (jQuery("#" + loggedinuser + "-liked-" + imageid).length > 0) {
+            console.log("likes pic already");
+            return;
+        }
+
+        console.log(imageid);
+
+        jQuery.post('/like/'+ imageid, function () {
+            //TODO display notification
+            var likesul = jQuery('#likes-' + imageid);
+            
+            console.log("heart exists?: ", jQuery('#heart-' + imageid).length);
+            if (jQuery('#heart-' + imageid).length == 0) {
+                likesul.prepend('<span id="heart-' + imageid+ '" class="heart"><i class="icon-heart"></i></span>');
+            }
+
+            var likesHeart = jQuery('#heart-' + imageid);
+
+            likesHeart.after("<li><span id='" + loggedinuser + "-liked-" + imageid + "'>"
+                             + "<a href='/images/" + loggedinuser + "'>" + loggedinuser + "</a>"
+                             + "</span></li>");
+            
+            console.log("liked: ", imageid);
+            $('#image-list').masonry('reload');
+        });
+    };
+
     jQuery.timeago.settings.strings = {
         prefixAgo: null,
         prefixFromNow: null,
@@ -23,21 +56,18 @@ jQuery(document).ready(function() {
     jQuery("button.close").click(function (event) {
         jQuery(event.target).parent().remove();
     });
-    
-    var imageList = $('#image-list');
 
-    imageList.masonry({
+    $('#image-list').masonry({
         itemSelector : '.imagebox',
         columnWidth : 240,
         isAnimated: true
     });
 
-    var imageBoxTemplate;
-
     function renderTempalte(template, options) {
         var html = require('ejs').render(template, options);
-        imageList.prepend(html).masonry('reload');
+        $('#image-list').prepend(html).masonry('reload');
         jQuery("abbr.timeago").timeago();
+        jQuery(".userimage").dblclick(likeImage);
     };
 
     //TODO use VCAP port
@@ -142,34 +172,6 @@ jQuery(document).ready(function() {
             jQuery('#charsLeft').text('(' + charsLeft + ')');
         });
 
-
-        jQuery(".userimage").dblclick(function (event){
-            var img = jQuery(event.target);
-            var imageid = img.attr('data-id');
-            
-            if (jQuery("#" + loggedinuser + "-liked-" + imageid).length > 0) {
-                console.log("likes pic already");
-                return;
-            }
-
-            jQuery.post('/like/'+ imageid, function () {
-                //TODO display notification
-                var likesul = jQuery('#likes-' + imageid);
-
-                
-                console.log("heart exists?: ", jQuery('#heart-' + imageid).length);
-                if (jQuery('#heart-' + imageid).length == 0) {
-                    likesul.prepend('<span id="heart-' + imageid+ '" class="heart"><i class="icon-heart"></i></span>');
-                }
-
-                var likesHeart = jQuery('#heart-' + imageid);
-
-                likesHeart.after("<li><span id='" + loggedinuser + "-liked-" + imageid + "'>"
-                                + "<a href='/images/" + loggedinuser + "'>" + loggedinuser + "</a>"
-                                + "</span></li>");
-                
-                console.log("liked: ", imageid);
-            });
-        });
+        jQuery(".userimage").dblclick(likeImage);
     }
 });
