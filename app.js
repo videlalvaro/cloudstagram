@@ -67,20 +67,6 @@ app.dynamicHelpers({
 
 // Configuration
 
-function getSessionOptions() {
-    var redisOpts = {
-        client: services.getRedisClient()
-    };
-
-    var sessOpts = {
-        secret: "cloudstagram secret sauce",
-        store: new RedisStore(redisOpts),
-        key: 'jsessionid'
-    };
-
-    return sessOpts;
-}
-
 app.configure(
     function() {
         app.set('views', __dirname + '/views');
@@ -94,7 +80,13 @@ app.configure(
             keepExtensions: true
         }));
         app.use(express.cookieParser());
-        app.use(express.session(getSessionOptions()));
+        app.use(express.session({
+            secret: "cloudstagram secret sauce",
+            store: new RedisStore({
+                client: services.getRedisClient()
+            }),
+            key: 'jsessionid'
+        }));
         app.use(express.methodOverride());
         app.use(app.router);
     }
