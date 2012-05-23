@@ -142,6 +142,10 @@ app.post('/like/:imageid', restrict, routes.likeImage);
 app.get('/isfollower/:userid', restrict, routes.isFollower);
 app.post('/follow/:userid', restrict, routes.followUser);
 
+app.get('*', function(req, res){
+  res.send(404);
+});
+
 services.getMongoDbConnection(function(err, db) {
     if (db) {
         services.getRabbitMqConnection(function(conn) {
