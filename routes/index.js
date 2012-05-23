@@ -45,7 +45,7 @@ function getUserForm(session, action, error, prevAction) {
 
     return view_helpers.renderTemplate('user_form', {
         action: action,
-        error: error,
+        error: errorMsg,
         ishidden: ishidden
     });
 }
@@ -147,10 +147,8 @@ exports.upload = function(req, res, next) {
     image_storage.storeFile(tmpPath, filename, mimeType, function (error, data) {
         if (error) {
             console.log(error);
-            //req.session.upload_error = "There was an error uploading your image";
             var response = "error|There was an error uploading your image|upload-" + unique;
             var code = 500;
-            req.session.prevAction = 'upload';
         } else {
             var fileData = {
                 userid: username, 
@@ -166,7 +164,7 @@ exports.upload = function(req, res, next) {
                       + "and is being processed by our services|upload-" + unique;
             var code = 201;
         }
-        console.log('upload success: ');
+        console.log('upload success');
         res.send(response, code);
     });    
 };
