@@ -67,6 +67,17 @@ div.box {
     webkit-border-radius: 3px;
     padding: 4px;
     text-align: center;
+    float: left;
+    width: 230px;
+}
+
+img.userimage {
+    height: 225px;
+    width: 225px;
+}
+
+#image-list {
+    width: 1000px;
 }
 
 .left-align {
@@ -87,7 +98,6 @@ input[type=text], input[type=password]{
 
 .profileLink {color:black;}
 
-img.userimage {
-    height: 250px;
-    width: 250px;
+.comment {
+    margin: 4px;
 }
