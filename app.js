@@ -85,7 +85,7 @@ app.configure(
             store: new RedisStore({
                 client: services.getRedisClient()
             }),
-            key: 'jsessionid'
+            key: 'thejsessionid'
         }));
         app.use(express.methodOverride());
         app.use(app.router);
