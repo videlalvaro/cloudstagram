@@ -87,7 +87,9 @@ jQuery(document).ready(function() {
         jQuery(".userimage").dblclick(likeImage);
     };
 
-    var sock = new SockJS('http://' + window.location.host +'/broadcast');
+    var sockUrl = 'http://' + window.location.host +'/broadcast';
+    console.log('sockUrl: ', sockUrl);
+    var sock = new SockJS(sockUrl);
     sock.onopen = function (event) {
         var username = loggedin ? loggedinuser : "anon";
         sock.send('auth|'+ username);
