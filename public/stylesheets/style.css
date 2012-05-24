@@ -106,3 +106,10 @@ input[type=text], input[type=password]{
     background-color: white;
     padding-left: 4px;
 }
+
+#copyright {
+    text-align: center;
+    margin-top: 5em;
+    background-color: black;
+    color: white;
+}

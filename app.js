@@ -58,6 +58,10 @@ app.dynamicHelpers({
             }
         });
         return html == "" ? "" : "<div class='row'>" + html + "</div>";
+    },
+
+    cf_instance: function(req, res) {
+        return cf_utils.getInstanceId();
     }
 });
 
