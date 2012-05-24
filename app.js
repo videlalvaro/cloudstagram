@@ -7,6 +7,7 @@ var express = require('express')
 , login = require('./routes/login.js')
 , fileServe = require('./routes/fileServe.js')
 , resize = require('./lib/resize.js')
+, notify_users = require('./lib/notify_users.js')
 , view_helpers = require('./lib/view_helpers.js')
 , services = require('./lib/services.js')
 , cf_utils = require('./lib/cloudFoundryUtil.js')
@@ -140,7 +141,8 @@ services.getMongoDbConnection(function(err, db) {
     if (db) {
         services.getRabbitMqConnection(function(conn) {
             if (conn) {
-                resize.startConsumers(broadcast);
+                notify_users.startConsumers(broadcast);
+                resize.startConsumers();
                 app.listen(process.env.VCAP_APP_PORT || 3000, function(){
                     console.log("Express server listening on port %d in %s mode", 
                                 app.address().port, 

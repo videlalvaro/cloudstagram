@@ -11,6 +11,7 @@ var fs = require('fs')
 , ejs = require('ejs')
 , view_helpers = require('../lib/view_helpers.js')
 , sanitize = require('validator').sanitize
+, cf_utils = require('../lib/cloudFoundryUtil.js')
 ;
 
 function generateNewFileName() {
