@@ -2,8 +2,8 @@ jQuery(document).ready(function() {
     var imageBoxTemplate;
 
     var likeImage = function(event){
-        var img = jQuery(event.target);
-        var imageid = img.attr('data-id');
+        var img = jQuery(event.target).parent().find('img');
+        var imageid = img.attr('src').split('/')[2];
         
         if (jQuery("#" + loggedinuser + "-liked-" + imageid).length > 0) {
             console.log("likes pic already");
@@ -84,7 +84,7 @@ jQuery(document).ready(function() {
         var html = require('ejs').render(template, options);
         $('#image-list').prepend(html).masonry('reload');
         jQuery("abbr.timeago").timeago();
-        jQuery(".userimage").dblclick(likeImage);
+        //jQuery(".lb-ima").dblclick(likeImage);
     };
 
     var sockUrl = 'http://' + window.location.host +'/broadcast';
@@ -197,7 +197,7 @@ jQuery(document).ready(function() {
             jQuery('#charsLeft').text('(' + charsLeft + ')');
         });
 
-        jQuery(".userimage").dblclick(likeImage);
+        jQuery(".lb-container").live('dblclick', likeImage);
 
         //user profile actions
         if (typeof profileUser !== "undefined") {
