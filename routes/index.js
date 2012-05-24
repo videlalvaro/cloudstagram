@@ -124,6 +124,10 @@ exports.userProfile = function(req, res) {
     });
 };
 
+function validImageType(mimeType) {
+    return ["image/jpeg", "image/png"].indexOf(mimeType) !== -1;
+}
+
 /*
  * POST handles image upload
  */
@@ -134,10 +138,18 @@ exports.upload = function(req, res, next) {
     var mimeType = mime.lookup(tmpPath);
     var filename = generateNewFileName();
 
+    if (!validImageType(mimeType)) {
+        fs.unlink(tmpPath);
+        res.send("error|Image type not supported. "
+                 + " Try uploading JPG or PNG images."
+                 + "|upload-" + filename, 415);
+        return;
+    }
+
     image_storage.storeFile(tmpPath, filename, mimeType, function (error, data) {
         if (error) {
             console.log(error);
-            var response = "error|There was an error uploading your image|upload-" + filename;
+            var response = "error|There was an error uploading your image.|upload-" + filename;
             var code = 500;
         } else {
             var fileData = {
@@ -150,7 +162,7 @@ exports.upload = function(req, res, next) {
             thumper.publishMessage('cloudstagram-new-image', fileData, '');
             delete req.session.upload_error;
             var response = "success|The image was uploaded succesfully "
-                      + "and is being processed by our services|upload-" + filename;
+                      + "and is being processed by our services.|upload-" + filename;
             var code = 201;
         }
         console.log('upload success');
