@@ -24,7 +24,7 @@ jQuery(document).ready(function() {
             var likesHeart = jQuery('#heart-' + imageid);
 
             likesHeart.after("<li><span id='" + loggedinuser + "-liked-" + imageid + "'>"
-                             + "<a href='/images/" + loggedinuser + "'>" + loggedinuser + "</a>"
+                             + "<a href='/profile/" + loggedinuser + "'>" + loggedinuser + "</a>"
                              + "</span></li>");
             
             console.log("liked: ", imageid);
