@@ -98,17 +98,9 @@ exports.userProfile = function(req, res) {
     var profileUser = req.params.userid;
     
     user_data.getUserData(profileUser, function(error, data) {
-        var info = {
-            images: data[0],
-            imagesCount: data[1] || 0,
-            followersCount: data[2] || 0,
-            followsCount: data[3] || 0
-        };
         
         var renderedImages = view_helpers.renderTemplate('image_list', {
-            data: {
-                images: data[0]
-            },
+            data: data.images,
             dateformat: dateformat,
             usernamelink: view_helpers.usernamelink,
             loggedin: view_helpers.loggedin,
@@ -122,7 +114,7 @@ exports.userProfile = function(req, res) {
 
         res.render('profile', {
             title: 'Cloudstagram', 
-            data: info, 
+            data: data, 
             username: username,
             profileUser: profileUser,
             renderedImages: renderedImages,

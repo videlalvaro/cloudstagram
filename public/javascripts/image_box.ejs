@@ -11,7 +11,7 @@
   <div>
     <img class="userimage" src="/image/<%= image.path %>" data-id="<%= image.path %>" data-owner="<%= image.username %>"></img>
   </div>
-  <div class="likes-container left-align">
+  <div class="likes-container left-align image-info">
     <ul id="likes-<%= image.path %>" class="likes">
       <% if(data.related && data.related[i].length) { %>
       <span id="heart-<%= image.path %>" class="heart"><i class="icon-heart"></i></span>
@@ -22,8 +22,8 @@
     </ul>
   </div>
   <% if (image.comment) { %>
-  <div class="comment left-align">
-    <p><%= image.comment %></p>
+  <div class="comment left-align image-info">
+    <p class="comment-text"><%= image.comment %></p>
   </div>
   <% } %>
 </div>
