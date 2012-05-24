@@ -5,20 +5,9 @@
     <link rel="stylesheet" media="screen" href="/bootstrap/css/bootstrap.min.css" >
     <link rel="stylesheet" media="screen" href="/stylesheets/lightbox.css" >
     <link rel="stylesheet" media="screen" href="/stylesheets/style.css" >
-    <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery.timeago.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery.form.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery.masonry.min.js"></script>
-    <script type="text/javascript" src="/javascripts/lightbox.js"></script>
-    <script type="text/javascript" src="/javascripts/sockjs-0.3.min.js"></script>
-    <script type="text/javascript" src="/javascripts/ejs.js"></script>
-    <script type="text/javascript" src="/javascripts/date.format.js"></script>
-    <script type="text/javascript" src="/javascripts/cloudstagram.js"></script>
-    <script id="image-box-template" type="text/tempalte" src="/javascripts/image_box.ejs"></script>
     <script type="text/javascript">
       var loggedin = <%= loggedin(username) %>;
       var loggedinuser = "<%= loggedinuser(username) %>";
-      var dateformat = dateFormat;
       usernamelink = function(username) {
       return "<a class='profileLink' href=/profile/" + username + ">" + username + "</a>";
       };
@@ -73,5 +62,15 @@
         </div>
         <%- body %>
       </div>
+      <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
+      <script type="text/javascript" src="/javascripts/jquery.timeago.js"></script>
+      <script type="text/javascript" src="/javascripts/jquery.form.js"></script>
+      <script type="text/javascript" src="/javascripts/jquery.masonry.min.js"></script>
+      <script type="text/javascript" src="/javascripts/lightbox.js"></script>
+      <script type="text/javascript" src="/javascripts/sockjs-0.3.min.js"></script>
+      <script type="text/javascript" src="/javascripts/ejs.js"></script>
+      <script type="text/javascript" src="/javascripts/date.format.js"></script>
+      <script id="image-box-template" type="text/tempalte" src="/javascripts/image_box.ejs"></script>
+      <script type="text/javascript" src="/javascripts/cloudstagram.js"></script>
   </body>
 </html>
