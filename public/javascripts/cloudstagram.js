@@ -1,54 +1,6 @@
-jQuery(document).ready(function() {
-    var imageBoxTemplate;
+var imageBoxTemplate;
 
-    var likeImage = function(event){
-        var img = jQuery(event.target).parent().find('img');
-        var imageid = img.attr('src').split('/')[2];
-        
-        if (jQuery("#" + loggedinuser + "-liked-" + imageid).length > 0) {
-            console.log("likes pic already");
-            return;
-        }
-
-        console.log(imageid);
-
-        jQuery.post('/like/'+ imageid, function () {
-            //TODO display notification
-            var likesul = jQuery('#likes-' + imageid);
-            
-            console.log("heart exists?: ", jQuery('#heart-' + imageid).length);
-            if (jQuery('#heart-' + imageid).length == 0) {
-                likesul.prepend('<span id="heart-' + imageid+ '" class="heart"><i class="icon-heart"></i></span>');
-            }
-
-            var likesHeart = jQuery('#heart-' + imageid);
-
-            likesHeart.after("<li><span id='" + loggedinuser + "-liked-" + imageid + "'>"
-                             + "<a href='/profile/" + loggedinuser + "'>" + loggedinuser + "</a>"
-                             + "</span></li>");
-            
-            console.log("liked: ", imageid);
-            $('#image-list').masonry('reload');
-        });
-    };
-
-    function displayAlert(id, type, message) {
-        var html = "<div id='" + id + "' class='alert alert-" + type + "'>" 
-            + "<button class='close' data-dismiss='alert'>×</button>"
-            + message + "</div>";
-
-        jQuery("#info-box").prepend(html);
-        jQuery("#" + id).click(function (){
-            jQuery(this).remove();
-        })
-    }
-    
-    function notifyUploadResult(id, type, message) {
-        displayAlert(id, type, message);
-        document.getElementById('upload-form').reset();
-        jQuery('#upload-button').removeAttr('disabled');
-    }
-
+function initTimeAgo() {
     jQuery.timeago.settings.strings = {
         prefixAgo: null,
         prefixFromNow: null,
@@ -68,72 +20,109 @@ jQuery(document).ready(function() {
         wordSeparator: " ",
         numbers: []
     };
-    jQuery("abbr.timeago").timeago();
+    jQuery("abbr.timeago").timeago();    
+}
 
-    jQuery("button.close").click(function (event) {
-        jQuery(event.target).parent().remove();
-    });
-
+function initMasonry() {
     $('#image-list').masonry({
         itemSelector : '.imagebox',
         columnWidth : 240,
         isAnimated: true
     });
+}
 
-    function renderImage(template, options) {
-        var html = require('ejs').render(template, options);
-        $('#image-list').prepend(html).masonry('reload');
-        jQuery("abbr.timeago").timeago();
-    };
+function displayAlert(id, type, message) {
+    var html = "<div id='" + id + "' class='alert alert-" + type + "'>" 
+        + "<button class='close' data-dismiss='alert'>×</button>"
+        + message + "</div>";
+    
+    jQuery("#info-box").prepend(html);
+    jQuery("#" + id).click(function (){
+        jQuery(this).remove();
+    })
+}
 
-    var sockUrl = 'http://' + window.location.host +'/broadcast';
-    console.log('sockUrl: ', sockUrl);
-    var sock = new SockJS(sockUrl);
-    sock.onopen = function (event) {
-        var username = loggedin ? loggedinuser : "anon";
-        sock.send('auth|'+ username);
-    };
-    sock.onmessage = function (event) {
-        console.log("onmessage: ", event.data);
-        var parts = event.data.split('|');
-        switch(parts[0]) {
-          case 'auth':
-            console.log('connected to sockjs');
-            jQuery('#upload-button').removeAttr('disabled');
-            break;
-          case 'new_pic':
-            var img = JSON.parse(parts[1]);
+function notifyUploadResult(id, type, message) {
+    displayAlert(id, type, message);
+    document.getElementById('upload-form').reset();
+    jQuery('#upload-button').removeAttr('disabled');
+}
 
-            //if the image is present don't append it
-            if(jQuery('#box-' + img.filename).length != 0) {
-                 break;
-            }
+function likeImage(event){
+    var img = jQuery(event.target).parent().find('img');
+    var imageid = img.attr('src').split('/')[2];
+    
+    if (jQuery("#" + loggedinuser + "-liked-" + imageid).length > 0) {
+        console.log("likes pic already");
+        return;
+    }
 
-            var templateOptions = {
-                image: {
-                    path: img.filename,
-                    comment: img.comment,
-                    username: img.userid,
-                    uploaded: img.uploaded,
-                },
-                data: {}
-            };
+    console.log(imageid);
 
-            // We do it this way so we can cache the template.
-            //TODO fade away the upload confirmation since we don't need it now that 
-            // we display the actual image
-            if (imageBoxTemplate) {
-                renderImage(imageBoxTemplate, templateOptions);
-            } else {
-                jQuery.get('/javascripts/image_box.ejs', function(imageBoxTemplate) {
-                    renderImage(imageBoxTemplate, templateOptions);
-                });
-            }
-            break
-        default:
-            console.log('got sockjs message: ', event.data);
+    jQuery.post('/like/'+ imageid, function () {
+        //TODO display notification
+        var likesul = jQuery('#likes-' + imageid);
+            
+        console.log("heart exists?: ", jQuery('#heart-' + imageid).length);
+        if (jQuery('#heart-' + imageid).length == 0) {
+            likesul.prepend('<span id="heart-' + imageid+ '" class="heart"><i class="icon-heart"></i></span>');
         }
+
+        var likesHeart = jQuery('#heart-' + imageid);
+
+        likesHeart.after("<li><span id='" + loggedinuser + "-liked-" + imageid + "'>"
+                         + "<a href='/profile/" + loggedinuser + "'>" + loggedinuser + "</a>"
+                         + "</span></li>");
+        
+        console.log("liked: ", imageid);
+        $('#image-list').masonry('reload');
+    });
+};
+
+function renderImage(template, options) {
+    var html = require('ejs').render(template, options);
+    $('#image-list').prepend(html).masonry('reload');
+    jQuery("abbr.timeago").timeago();
+};
+
+function handleNewPic(imgData) {
+    var img = JSON.parse(imgData);
+    
+    //if the image is present don't append it
+    if(jQuery('#box-' + img.filename).length != 0) {
+        return;
+    }
+    
+    var templateOptions = {
+        image: {
+            path: img.filename,
+            comment: img.comment,
+            username: img.userid,
+            uploaded: img.uploaded,
+        },
+        data: {}
     };
+
+    // We do it this way so we can cache the template.
+    //TODO fade away the upload confirmation since we don't need it now that 
+    // we display the actual image
+    if (imageBoxTemplate) {
+        renderImage(imageBoxTemplate, templateOptions);
+    } else {
+        jQuery.get('/javascripts/image_box.ejs', function(imageBoxTemplate) {
+            renderImage(imageBoxTemplate, templateOptions);
+        });
+    }
+}
+
+jQuery(document).ready(function() {
+
+    initTimeAgo();
+    initMasonry();
+
+    jQuery("button.close").click(function (event) {
+        jQuery(event.target).parent().remove();
+    });
 
     if (!loggedin) {
         jQuery('.show-form').click(function (event) {
