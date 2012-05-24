@@ -9,6 +9,10 @@ function sendFile(res, data, mime, code) {
 exports.serveFile = function(req, res, next) {
     var filename = req.params.id;
     image_storage.readGsFile(filename, function(error, gsData) {
-        sendFile(res, gsData.binary, gsData.gsObject.contentType, HTTPStatus.OK);
+        if (error) {
+            res.send(404);
+        } else {
+            sendFile(res, gsData.binary, gsData.gsObject.contentType, HTTPStatus.OK);   
+        }
     });
 };

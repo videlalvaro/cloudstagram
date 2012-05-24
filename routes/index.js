@@ -218,3 +218,16 @@ exports.isFollower = function (req, res, next) {
         }
     });
 }
+
+exports.deleteImage = function (req, res, next) {
+    var filename = req.params.imageid;
+    console.log("deleteImage: ", filename);
+    image_storage.deleteImage(filename, function(error, result) {
+        if (!error) {
+            res.send('Image Deleted', 200);
+        } else {
+            console.log("deleteImage: ", result);
+            res.send('Failed to delete image', 500);
+        }
+    });  
+}

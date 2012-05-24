@@ -1,0 +1,20 @@
+--- 
+applications: 
+  .: 
+    instances: 1
+    url: ${name}.${target-base}
+    services: 
+      redis-96b86: 
+        type: redis
+      mongodb-b5775: 
+        type: mongodb
+      rabbitmq-9d5a1: 
+        type: rabbitmq
+    framework: 
+      info: 
+        description: Node.js Application
+        exec: 
+        mem: 64M
+      name: node
+    name: cloudstagram
+    mem: 64M

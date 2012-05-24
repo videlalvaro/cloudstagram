@@ -118,6 +118,9 @@ app.get('/image/:id', fileServe.serveFile);
 app.get('/profile/:userid', routes.userProfile);
 app.get('/latest', routes.latestImages);
 
+//TODO add security, probably via an admin page.
+app.post('/delete/image/:imageid', routes.deleteImage);
+
 // Logged out only routes
 app.post('/register', loggedoutOnly, login.addUser);
 app.post('/login', loggedoutOnly, login.auth);
