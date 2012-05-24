@@ -84,7 +84,6 @@ jQuery(document).ready(function() {
         var html = require('ejs').render(template, options);
         $('#image-list').prepend(html).masonry('reload');
         jQuery("abbr.timeago").timeago();
-        //jQuery(".lb-ima").dblclick(likeImage);
     };
 
     var sockUrl = 'http://' + window.location.host +'/broadcast';
