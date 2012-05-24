@@ -42,6 +42,19 @@ function authenticate(name, pass, fn) {
 
 exports.addUser = function(req, res) {
     console.log("addUser: ", req.body.username, req.body.password);
+    
+    if ((typeof req.body.username === "undefined") 
+        || req.body.username.length == 0 
+        || (typeof req.body.password === "undefined")
+        || req.body.password.length == 0
+       ) {
+        req.session.error = "You must provide a valid username and password";
+        req.session.prevAction = 'register';
+        console.log("wrong username or password for registration");
+        res.redirect('back');
+        return;
+    }
+
     var username = sanitize(req.body.username).xss();
     var password = req.body.password;
     var client = services.getRedisClient();
