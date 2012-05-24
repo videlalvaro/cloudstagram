@@ -12,5 +12,4 @@ do
     esac
 done
 
-
-echo curl -X POST $HOST/delete/image/$IMAGE
+curl -X POST $HOST/delete/image/$IMAGE
