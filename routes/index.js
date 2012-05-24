@@ -10,7 +10,6 @@ var fs = require('fs')
 , user_data = require('../lib/user_data.js')
 , ejs = require('ejs')
 , view_helpers = require('../lib/view_helpers.js')
-, dateformat = require('dateformat')
 , sanitize = require('validator').sanitize
 ;
 
@@ -101,7 +100,6 @@ exports.userProfile = function(req, res) {
         
         var renderedImages = view_helpers.renderTemplate('image_list', {
             data: data.images,
-            dateformat: dateformat,
             usernamelink: view_helpers.usernamelink,
             loggedin: view_helpers.loggedin,
             loggedinuser: view_helpers.loggedinuser,
@@ -126,6 +124,19 @@ exports.userProfile = function(req, res) {
 
 function validImageType(mimeType) {
     return ["image/jpeg", "image/png"].indexOf(mimeType) !== -1;
+}
+
+
+function ISODateString(d) {
+    function pad(n){
+        return n > 10 ? '0'+n : n
+    }
+    return d.getUTCFullYear()+'-'
+        + pad(d.getUTCMonth()+1)+'-'
+        + pad(d.getUTCDate())+'T'
+        + pad(d.getUTCHours())+':'
+        + pad(d.getUTCMinutes())+':'
+        + pad(d.getUTCSeconds())+'Z'
 }
 
 /*
@@ -156,7 +167,7 @@ exports.upload = function(req, res, next) {
                 userid: username, 
                 filename: filename,
                 comment: comment,
-                uploaded: Date.now(),
+                uploaded: ISODateString(new Date()),
                 mime: mimeType
             };            
             thumper.publishMessage('cloudstagram-new-image', fileData, '');

@@ -3,7 +3,6 @@
  */
 
 var express = require('express')
-, dateformat = require('dateformat')
 , routes = require('./routes')
 , login = require('./routes/login.js')
 , fileServe = require('./routes/fileServe.js')
@@ -21,10 +20,6 @@ var broadcast = require('./lib/broadcast')();
 broadcast.installHandlers(app, {
     prefix: '/broadcast',
     sockjs_url: '/javascripts/sockjs-0.3.js'
-});
-
-app.helpers({
-    dateformat: dateformat
 });
 
 app.helpers({

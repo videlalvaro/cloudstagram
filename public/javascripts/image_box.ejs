@@ -5,7 +5,7 @@
       <%- usernamelink(image.username) %>
     </span>
     <span class="when">
-      <i class="icon-time"></i><abbr class="timeago" title="<%= dateformat(new Date(image.uploaded), 'isoDateTime') %>"><%= dateformat(new Date(image.uploaded), 'mmmm dS, yyyy') %></abbr>
+      <i class="icon-time"></i><abbr class="timeago" title="<%= image.uploaded %>"><%= image.uploaded %></abbr>
     </span>
   </div>
   <div>

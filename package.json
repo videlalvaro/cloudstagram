@@ -12,7 +12,6 @@
         , "node-uuid": ""
         , "amqp": ">= 0.1.0"
         , "bcrypt": ""
-        , "dateformat": ""
         , "validator": ""
         , "cloudfoundry": ""
         , "mongodb": ""
