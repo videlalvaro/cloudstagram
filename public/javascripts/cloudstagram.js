@@ -120,6 +120,8 @@ jQuery(document).ready(function() {
     initTimeAgo();
     initMasonry();
 
+    jQuery('#instance-tooltip').tooltip();
+
     jQuery("button.close").click(function (event) {
         jQuery(event.target).parent().remove();
     });
