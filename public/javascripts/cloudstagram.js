@@ -87,6 +87,7 @@ function renderImage(template, options) {
 
 function handleNewPic(imgData) {
     var img = JSON.parse(imgData);
+    jQuery('#no-pics').remove();
     
     //if the image is present don't append it
     if(jQuery('#box-' + img.filename).length != 0) {
