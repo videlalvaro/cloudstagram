@@ -49,15 +49,14 @@ function notifyUploadResult(id, type, message) {
 }
 
 function likeImage(event){
-    var img = jQuery(event.target).parent().find('img');
-    var imageid = img.attr('src').split('/')[2];
+    var btn = jQuery(event.target);
+    var imageid = btn.attr('data-id');
+    console.log('likes image: ', imageid);
     
     if (jQuery("#" + loggedinuser + "-liked-" + imageid).length > 0) {
         console.log("likes pic already");
         return;
     }
-
-    console.log(imageid);
 
     jQuery.post('/like/'+ imageid, function () {
         //TODO display notification
@@ -75,6 +74,7 @@ function likeImage(event){
                          + "</span></li>");
         
         console.log("liked: ", imageid);
+        btn.parent().remove();
         $('#image-list').masonry('reload');
     });
 };
@@ -99,9 +99,11 @@ function handleNewPic(imgData) {
             path: img.filename,
             comment: img.comment,
             username: img.userid,
-            uploaded: img.uploaded,
+            uploaded: img.uploaded, 
         },
-        data: {}
+        data: {},
+        loggedin: loggedin,
+        loggedinuser: loggedinuser
     };
 
     // We do it this way so we can cache the template.
@@ -188,7 +190,7 @@ jQuery(document).ready(function() {
             jQuery('#charsLeft').text('(' + charsLeft + ')');
         });
 
-        jQuery(".lb-container").live('dblclick', likeImage);
+        jQuery("button.like").live('click', likeImage);
 
         //user profile actions
         if (typeof profileUser !== "undefined") {

@@ -11,6 +11,11 @@
   <div>
     <a href="/image/<%= image.path %>" rel="lightbox" <% if (image.comment) { %>title="<%= image.comment %>"<% } %>><img class="userimage" src="/image/<%= image.path %>" data-id="<%= image.path %>" data-owner="<%= image.username %>"></img></a>
   </div>
+  <% if (loggedin && ((typeof data.related == "undefined") || data.related[i].indexOf(loggedinuser) == -1 )) { %>
+  <div class="like-action">
+    <button class="like btn btn-primary btn-mini" data-id="<%= image.path %>">Like</button>
+  </div>
+  <% } %>
   <div class="likes-container left-align image-info">
     <ul id="likes-<%= image.path %>" class="likes">
       <% if(data.related && data.related[i].length) { %>

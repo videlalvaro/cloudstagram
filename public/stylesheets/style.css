@@ -84,6 +84,11 @@ img.userimage {
     text-align: left;
 }
 
+.like-action {
+    text-align: right;
+    margin-top: 2px;
+}
+
 input[type=text], input[type=password]{
     height: 2em;
 }

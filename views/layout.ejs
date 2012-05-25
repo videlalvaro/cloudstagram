@@ -7,7 +7,7 @@
     <link rel="stylesheet" media="screen" href="/stylesheets/style.css" >
     <script type="text/javascript">
       var loggedin = <%= loggedin(username) %>;
-      var loggedinuser = "<%= loggedinuser(username) %>";
+      var loggedinuser = "<%= getLoggedinUser(username) %>";
       usernamelink = function(username) {
       return "<a class='profileLink' href=/profile/" + username + ">" + username + "</a>";
       };
