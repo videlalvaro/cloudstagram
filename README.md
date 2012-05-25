@@ -9,6 +9,8 @@ With this app you can:
 - Follow other users
 - Like Images
 
+![Cloudstagram](https://bitbucket.org/videlalvaro/cloudstagram/raw/68fb5f131d4f/cloudstagram.png)
+
 ## Features ##
 
 __Latest Images__: if you are on the [latest images tab](http://cloudstagram.cloudfoundry.com/latest) of Cloudstagram then you will see new images in realtime as they are uploaded by users. As a logged out user you are by default in the latest images view.
