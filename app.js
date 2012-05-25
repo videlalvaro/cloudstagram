@@ -32,7 +32,7 @@ app.helpers({
 });
 
 app.helpers({
-    loggedinuser: view_helpers.loggedinuser
+    getLoggedinUser: view_helpers.getLoggedinUser
 });
 
 app.dynamicHelpers({

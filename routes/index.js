@@ -100,10 +100,11 @@ exports.userProfile = function(req, res) {
     user_data.getUserData(profileUser, function(error, data) {
         
         var renderedImages = view_helpers.renderTemplate('image_list', {
+            username: username,
             data: data.images,
             usernamelink: view_helpers.usernamelink,
             loggedin: view_helpers.loggedin,
-            loggedinuser: view_helpers.loggedinuser,
+            loggedinuser: view_helpers.getLoggedinUser(username),
             imageBoxTemplate: view_helpers.getImageBoxTemplate(),
             ejs: ejs
         });
