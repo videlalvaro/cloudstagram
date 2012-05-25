@@ -1,6 +1,6 @@
 # Cloudstagram #
 
-Cloudstagram is a Realtime Image Sharing Application that runs on [Cloud Foundry](http://cloudfoundry.com/).
+[Cloudstagram](http://cloudstagram.cloudfoundry.com/) is a Realtime Image Sharing Application that runs on [Cloud Foundry](http://cloudfoundry.com/).
 
 With this app you can:
 
