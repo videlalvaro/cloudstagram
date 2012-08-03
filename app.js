@@ -4,6 +4,7 @@
 
 var express = require('express')
 , routes = require('./routes')
+, routes_fiters = require('./routes/routes_filters.js')
 , login = require('./routes/login.js')
 , fileServe = require('./routes/fileServe.js')
 , resize = require('./lib/resize.js')
@@ -78,23 +79,6 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
 
-function restrict(req, res, next) {
-    if (req.session.user) {
-        next();
-    } else {
-        req.session.error = 'Access denied!';
-        res.redirect('/login');
-    }
-}
-
-function loggedoutOnly(req, res, next) {
-    if(req.session.user) {
-        res.redirect('/');
-    } else {
-        next();
-    }
-}
-
 // Routes
 app.get('/', routes.index);
 app.get('/image/:id', fileServe.serveFile);
@@ -105,16 +89,17 @@ app.get('/latest', routes.latestImages);
 app.post('/delete/image/:imageid', routes.deleteImage);
 
 // Logged out only routes
-app.post('/register', loggedoutOnly, login.addUser);
-app.post('/login', loggedoutOnly, login.auth);
+app.post('/register', routes_fiters.loggedoutOnly, login.addUser);
+app.post('/login', routes_fiters.loggedoutOnly, login.auth);
 
 // Secure routes
-app.post('/upload', restrict, routes.upload);
-app.get('/logout', restrict, login.logout);
-app.post('/like/:imageid', restrict, routes.likeImage);
-app.get('/isfollower/:userid', restrict, routes.isFollower);
-app.post('/follow/:userid', restrict, routes.followUser);
+app.post('/upload', routes_fiters.loggedinOnly, routes.upload);
+app.get('/logout', routes_fiters.loggedinOnly, login.logout);
+app.post('/like/:imageid', routes_fiters.loggedinOnly, routes.likeImage);
+app.get('/isfollower/:userid', routes_fiters.loggedinOnly, routes.isFollower);
+app.post('/follow/:userid', routes_fiters.loggedinOnly, routes.followUser);
 
+// Match all routes
 app.get('*', function(req, res){
   res.send(404);
 });
