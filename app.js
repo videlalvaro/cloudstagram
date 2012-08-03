@@ -24,14 +24,8 @@ broadcast.installHandlers(app, {
 });
 
 app.helpers({
-    usernamelink: view_helpers.usernamelink
-});
-
-app.helpers({
-    loggedin: view_helpers.loggedin
-});
-
-app.helpers({
+    usernamelink: view_helpers.usernamelink,
+    loggedin: view_helpers.loggedin,
     getLoggedinUser: view_helpers.getLoggedinUser
 });
 
@@ -42,22 +36,6 @@ app.dynamicHelpers({
 
     session: function(req, res){
         return req.session;
-    },
-
-    flashMessages: function(req, res){
-        var html = ""
-        , flash  = req.flash();
-        ['error', 'info', 'success'].forEach(function(type) {
-            if(flash[type]) {
-                flash[type].forEach(function(data) {
-                    var parts = data.split('|');
-                    html += "<div class='alert alert-" + type + "'>" 
-                        + "<button id='" + parts[1] + "'class='close' data-dismiss='alert'>×</button>"
-                        + parts[0] + "</div>";
-                    });
-            }
-        });
-        return html == "" ? "" : "<div class='row'>" + html + "</div>";
     },
 
     cf_instance: function(req, res) {
@@ -81,7 +59,7 @@ app.configure(
         }));
         app.use(express.cookieParser());
         app.use(express.session({
-            secret: "cloudstagram secret sauce",
+            secret: "cloudstagram secret sauce", //TODO use an env variable here
             store: new RedisStore({
                 client: services.getRedisClient()
             }),
