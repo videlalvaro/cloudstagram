@@ -7,6 +7,7 @@ var express = require('express')
 , routes = require('./routes')
 , upload_image = require('./routes/upload_image.js')
 , user_profile = require('./routes/user_profile.js')
+, image_actions = require('./routes/image_actions.js')
 , follow = require('./follow.js')
 , login = require('./routes/login.js')
 , fileServe = require('./routes/fileServe.js')
@@ -89,7 +90,7 @@ app.get('/profile/:userid', user_profile.profile);
 app.get('/latest', routes.latestImages);
 
 //TODO add security, probably via an admin page.
-app.post('/delete/image/:imageid', routes.deleteImage);
+app.post('/delete/image/:imageid', image_actions.deleteImage);
 
 // Logged out only routes
 app.post('/register', routes_fiters.loggedoutOnly, login.addUser);
@@ -98,7 +99,7 @@ app.post('/login', routes_fiters.loggedoutOnly, login.auth);
 // Secure routes
 app.post('/upload', routes_fiters.loggedinOnly, upload_image.upload);
 app.get('/logout', routes_fiters.loggedinOnly, login.logout);
-app.post('/like/:imageid', routes_fiters.loggedinOnly, routes.likeImage);
+app.post('/like/:imageid', routes_fiters.loggedinOnly, image_actions.likeImage);
 app.get('/isfollower/:userid', routes_fiters.loggedinOnly, follow.isFollower);
 app.post('/follow/:userid', routes_fiters.loggedinOnly, follow.followUser);
 
