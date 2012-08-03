@@ -3,11 +3,17 @@ var ejs = require('ejs')
 , view_helpers = require('../lib/view_helpers.js')
 ;
 
-exports.userProfile = function(req, res) {
+exports.profile = function(req, res) {
     var username = req.session.user ? req.session.user.name : null;
     var profileUser = req.params.userid;
     
     user_data.getUserData(profileUser, function(error, data) {
+        var welcome_msg = req.session.user 
+            ? 'welcome' : 'welcome_visitor';
+        var sideform = req.session.user 
+            ? null : view_helpers.getSideForm(req.session);
+        var sidemessage = req.session.user 
+            ? null : view_helpers.getSideMessage(welcome_msg);
         
         var renderedImages = view_helpers.renderTemplate('image_list', {
             username: username,
@@ -18,9 +24,6 @@ exports.userProfile = function(req, res) {
             imageBoxTemplate: view_helpers.getImageBoxTemplate(),
             ejs: ejs
         });
-
-        var sideform = req.session.user ? null : view_helpers.getSideForm(req.session);
-        var sidemessage = req.session.user ? null : view_helpers.getSideMessage(req.session.user ? 'welcome' : 'welcome_visitor');
 
         res.render('profile', {
             title: 'Cloudstagram', 
