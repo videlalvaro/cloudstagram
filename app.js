@@ -6,6 +6,7 @@ var express = require('express')
 , routes_fiters = require('./routes/routes_filters.js')
 , routes = require('./routes')
 , upload_image = require('./routes/upload_image.js')
+, user_profile = require('./routes/user_profile.js')
 , follow = require('./follow.js')
 , login = require('./routes/login.js')
 , fileServe = require('./routes/fileServe.js')
@@ -84,7 +85,7 @@ app.configure('production', function(){
 // Routes
 app.get('/', routes.index);
 app.get('/image/:id', fileServe.serveFile);
-app.get('/profile/:userid', routes.userProfile);
+app.get('/profile/:userid', user_profile.profile);
 app.get('/latest', routes.latestImages);
 
 //TODO add security, probably via an admin page.
@@ -116,7 +117,7 @@ services.getMongoDbConnection(function(err, db) {
                     console.log("Express server listening on port %d in %s mode", 
                                 app.address().port, 
                                 app.settings.env);
-                })
+                });
             } else {
                 console.log("failed to connect to rabbitmq");
             }
