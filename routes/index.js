@@ -115,20 +115,6 @@ exports.userProfile = function(req, res) {
     });
 };
 
-// ass seen on: https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference:Global_Objects:Date
-function ISODateString(d) {
-    function pad(n){
-        return n > 10 ? '0'+n : n
-    }
-    return d.getUTCFullYear()+'-'
-        + pad(d.getUTCMonth()+1)+'-'
-        + pad(d.getUTCDate())+'T'
-        + pad(d.getUTCHours())+':'
-        + pad(d.getUTCMinutes())+':'
-        + pad(d.getUTCSeconds())+'Z';
-}
-
-
 exports.likeImage = function(req, res, next) {
     var username = req.session.user.name;
     var imageid = req.params.imageid;

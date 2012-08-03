@@ -15,6 +15,19 @@ function validImageType(mimeType) {
     return ["image/jpeg", "image/png"].indexOf(mimeType) !== -1;
 }
 
+// ass seen on: https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference:Global_Objects:Date
+function ISODateString(d) {
+    function pad(n){
+        return n > 10 ? '0'+n : n;
+    }
+    return d.getUTCFullYear()+'-'
+        + pad(d.getUTCMonth()+1)+'-'
+        + pad(d.getUTCDate())+'T'
+        + pad(d.getUTCHours())+':'
+        + pad(d.getUTCMinutes())+':'
+        + pad(d.getUTCSeconds())+'Z';
+}
+
 /*
  * POST handles image upload
  */
@@ -45,7 +58,7 @@ exports.upload = function(req, res, next) {
                 comment: comment,
                 uploaded: ISODateString(new Date()),
                 mime: mimeType
-            };            
+            };
             thumper.publishMessage('cloudstagram-new-image', fileData, '');
             delete req.session.upload_error;
             var response = "success|The image was uploaded succesfully "
