@@ -3,8 +3,9 @@
  */
 
 var express = require('express')
-, routes = require('./routes')
 , routes_fiters = require('./routes/routes_filters.js')
+, routes = require('./routes')
+, follow = require('./follow.js')
 , login = require('./routes/login.js')
 , fileServe = require('./routes/fileServe.js')
 , resize = require('./lib/resize.js')
@@ -96,8 +97,8 @@ app.post('/login', routes_fiters.loggedoutOnly, login.auth);
 app.post('/upload', routes_fiters.loggedinOnly, routes.upload);
 app.get('/logout', routes_fiters.loggedinOnly, login.logout);
 app.post('/like/:imageid', routes_fiters.loggedinOnly, routes.likeImage);
-app.get('/isfollower/:userid', routes_fiters.loggedinOnly, routes.isFollower);
-app.post('/follow/:userid', routes_fiters.loggedinOnly, routes.followUser);
+app.get('/isfollower/:userid', routes_fiters.loggedinOnly, follow.isFollower);
+app.post('/follow/:userid', routes_fiters.loggedinOnly, follow.followUser);
 
 // Match all routes
 app.get('*', function(req, res){
