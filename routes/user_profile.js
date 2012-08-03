@@ -8,8 +8,7 @@ exports.profile = function(req, res) {
     var profileUser = req.params.userid;
     
     user_data.getUserData(profileUser, function(error, data) {
-        var welcome_msg = req.session.user 
-            ? 'welcome' : 'welcome_visitor';
+        var welcome_msg = view_helpers.getWelcomeMessage(req.session.user);
         var sideform = req.session.user 
             ? null : view_helpers.getSideForm(req.session);
         var sidemessage = req.session.user 

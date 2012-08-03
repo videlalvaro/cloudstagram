@@ -11,16 +11,8 @@ var image_storage = require('../lib/image_storage.js')
 exports.index = function(req, res) {
     // TODO remove magick numbers. Move them to configuraion
     var username = req.session.user ? req.session.user.name : null;
-    var callback = function(error, data) {
-        res.render('image_list', { 
-            title: 'Cloudstagram', 
-            data: data, 
-            username: username,
-            sideform: view_helpers.getSideForm(req.session),
-            sidemessage: view_helpers.getSideMessage(req.session.user ? 'welcome' : 'welcome_visitor'),
-            imageBoxTemplate: view_helpers.getImageBoxTemplate()
-        });
-    };
+    var welcome_msg = view_helpers.getWelcomeMessage(req.session.user);
+    var callback = view_helpers.imageList(req.session, username, welcome_msg);
 
     if (username == null) {
         user_images.getLatestImages(0, 49, callback);
@@ -30,28 +22,18 @@ exports.index = function(req, res) {
 };
 
 exports.latestImages = function(req, res) {
+    // TODO remove magick numbers. Move them to configuraion
     var username = req.session.user ? req.session.user.name : null;
-    user_images.getLatestImages(0, 49, function(error, data) {
-        res.render('image_list', {
-            title: 'Cloudstagram', 
-            data: data, 
-            username: username,
-            sideform: view_helpers.getSideForm(req.session),
-            sidemessage: view_helpers.getSideMessage('latest'),
-            imageBoxTemplate: view_helpers.getImageBoxTemplate()
-        });
-    });
+    var welcome_msg = 'latest';
+    var callback = view_helpers.imageList(req.session, username, welcome_msg);
+    user_images.getLatestImages(0, 49, callback);
 };
 
 exports.likeImage = function(req, res, next) {
     var username = req.session.user.name;
     var imageid = req.params.imageid;
     user_interactions.likeImage(username, imageid, function(error, data){
-        if (error) {
-            res.send(500);
-        } else {
-            res.send(204);
-        }
+        error ? res.send(500) : res.send(204);
     });
 };
 
