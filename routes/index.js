@@ -138,4 +138,4 @@ exports.deleteImage = function (req, res, next) {
             res.send('Failed to delete image', 500);
         }
     });  
-}
+};
