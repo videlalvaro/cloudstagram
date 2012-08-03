@@ -5,6 +5,7 @@
 var express = require('express')
 , routes_fiters = require('./routes/routes_filters.js')
 , routes = require('./routes')
+, upload_image = require('./routes/upload_image.js')
 , follow = require('./follow.js')
 , login = require('./routes/login.js')
 , fileServe = require('./routes/fileServe.js')
@@ -94,7 +95,7 @@ app.post('/register', routes_fiters.loggedoutOnly, login.addUser);
 app.post('/login', routes_fiters.loggedoutOnly, login.auth);
 
 // Secure routes
-app.post('/upload', routes_fiters.loggedinOnly, routes.upload);
+app.post('/upload', routes_fiters.loggedinOnly, upload_image.upload);
 app.get('/logout', routes_fiters.loggedinOnly, login.logout);
 app.post('/like/:imageid', routes_fiters.loggedinOnly, routes.likeImage);
 app.get('/isfollower/:userid', routes_fiters.loggedinOnly, follow.isFollower);
