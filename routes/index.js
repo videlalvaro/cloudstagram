@@ -1,50 +1,9 @@
-var 
-, path = require('path')
-, image_storage = require('../lib/image_storage.js')
+var image_storage = require('../lib/image_storage.js')
 , user_images = require('../lib/user_images.js')
 , user_interactions = require('../lib/user_interactions.js')
-, user_data = require('../lib/user_data.js')
-, ejs = require('ejs')
 , view_helpers = require('../lib/view_helpers.js')
 , cf_utils = require('../lib/cloudFoundryUtil.js')
 ;
-
-function getSideForm(session) {
-    if (session.user) {
-        return view_helpers.renderTemplate('upload_form', {
-            session: session
-        });
-    } else {
-        var forms = getUserForm(session, 'login', session.error, session.prevAction) 
-            + getUserForm(session, 'register', session.error, session.prevAction); 
-        delete session.error;
-        delete session.prevAction;
-        return forms;
-    }
-}
-
-function getUserForm(session, action, error, prevAction) {
-    var ishidden;
-    var errorMsg = action == prevAction ? error : null;
-    
-    if (typeof session.prevAction === "undefined") {
-        //if no previous action then hide register form
-        ishidden = action == "register";
-    } else {
-        ishidden = action != session.prevAction;
-    }
-
-    return view_helpers.renderTemplate('user_form', {
-        action: action,
-        error: errorMsg,
-        ishidden: ishidden
-    });
-}
-
-function getSideMessage(message) {
-    return view_helpers.renderTemplate(message, {
-    });
-}
 
 /*
  * GET home page.
@@ -57,8 +16,8 @@ exports.index = function(req, res) {
             title: 'Cloudstagram', 
             data: data, 
             username: username,
-            sideform: getSideForm(req.session),
-            sidemessage: getSideMessage(req.session.user ? 'welcome' : 'welcome_visitor'),
+            sideform: view_helpers.getSideForm(req.session),
+            sidemessage: view_helpers.getSideMessage(req.session.user ? 'welcome' : 'welcome_visitor'),
             imageBoxTemplate: view_helpers.getImageBoxTemplate()
         });
     };
@@ -77,40 +36,9 @@ exports.latestImages = function(req, res) {
             title: 'Cloudstagram', 
             data: data, 
             username: username,
-            sideform: getSideForm(req.session),
-            sidemessage: getSideMessage('latest'),
+            sideform: view_helpers.getSideForm(req.session),
+            sidemessage: view_helpers.getSideMessage('latest'),
             imageBoxTemplate: view_helpers.getImageBoxTemplate()
-        });
-    });
-}
-
-exports.userProfile = function(req, res) {
-    var username = req.session.user ? req.session.user.name : null;
-    var profileUser = req.params.userid;
-    
-    user_data.getUserData(profileUser, function(error, data) {
-        
-        var renderedImages = view_helpers.renderTemplate('image_list', {
-            username: username,
-            data: data.images,
-            usernamelink: view_helpers.usernamelink,
-            loggedin: view_helpers.loggedin,
-            loggedinuser: view_helpers.getLoggedinUser(username),
-            imageBoxTemplate: view_helpers.getImageBoxTemplate(),
-            ejs: ejs
-        });
-
-        var sideform = req.session.user ? null : getSideForm(req.session);
-        var sidemessage = req.session.user ? null : getSideMessage(req.session.user ? 'welcome' : 'welcome_visitor');
-
-        res.render('profile', {
-            title: 'Cloudstagram', 
-            data: data, 
-            username: username,
-            profileUser: profileUser,
-            renderedImages: renderedImages,
-            sideform: sideform,
-            sidemessage: sidemessage
         });
     });
 };
