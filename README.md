@@ -82,9 +82,10 @@ The app requires that you bind the following services:
 - Redis
 - RabbitMQ
 
-The app users the following node.js runtime:
+The app uses the following node.js runtime:
 
 `--runtime=node06`
 
+To push the app to cloudfoundry type:
 
-
+    vmc push cloudstagram --runtime=node06
