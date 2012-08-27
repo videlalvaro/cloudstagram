@@ -15,7 +15,7 @@ function validImageType(mimeType) {
     return ["image/jpeg", "image/png"].indexOf(mimeType) !== -1;
 }
 
-// ass seen on: https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference:Global_Objects:Date
+// as seen on: https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference:Global_Objects:Date
 function ISODateString(d) {
     function pad(n){
         return n > 10 ? '0'+n : n;
