@@ -20,6 +20,8 @@ var express = require('express')
 , ejs = require('ejs')
 ;
 
+process.env.MAGICK_TMPDIR = __dirname + '/tmp';
+
 var app = module.exports = express.createServer();
 
 var broadcast = require('./lib/broadcast')();
