@@ -59,7 +59,7 @@ exports.upload = function(req, res, next) {
                 uploaded: ISODateString(new Date()),
                 mime: mimeType
             };
-            thumper.publishMessage('cloudstagram-new-image', fileData, '');
+            thumper.publishMessage('cloudstagram-upload', fileData, '');
             delete req.session.upload_error;
             var response = "success|The image was uploaded succesfully "
                       + "and is being processed by our services.|upload-" + filename;
