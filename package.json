@@ -16,5 +16,6 @@
         , "cloudfoundry": ""
         , "mongodb": ""
         , "sockjs": "0.3"
+        , "imagemagick": ""
     }
 }
