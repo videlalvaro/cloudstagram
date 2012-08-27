@@ -10,6 +10,7 @@ exports.serveFile = function(req, res, next) {
     var filename = req.params.id;
     image_storage.readGsFile(filename, function(error, gsData) {
         if (error) {
+            console.log(error);
             res.send(404);
         } else {
             sendFile(res, gsData.binary, gsData.gsObject.contentType, HTTPStatus.OK);   
