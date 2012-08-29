@@ -12,6 +12,7 @@ function generateNewFileName() {
 }
 
 function validImageType(mimeType) {
+    console.log("validImageType: ", mimeType);
     return ["image/jpeg", "image/png"].indexOf(mimeType) !== -1;
 }
 
