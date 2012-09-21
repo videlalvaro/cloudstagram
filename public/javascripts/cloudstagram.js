@@ -1,4 +1,5 @@
 var imageBoxTemplate;
+var imageListTemplate;
 
 function initTimeAgo() {
     jQuery.timeago.settings.strings = {
@@ -185,11 +186,29 @@ function initUploadForm() {
     });
 }
 
+function initCommentField() {
+    jQuery('#image-comment').keyup(function() {
+        var len = this.value.length;
+        if (len >= 140) {
+            this.value = this.value.substring(0, 140);
+        }
+        var charsLeft = 140 - len;
+            jQuery('#charsLeft').text('(' + charsLeft + ')');
+    });
+}
+
+function enableLikeButtons() {
+    jQuery("button.like").live('click', likeImage);
+}
+
 jQuery(document).ready(function() {
 
-    initTimeAgo();
-    initMasonry();
     initInstanceInfoTooltip();
+
+    //if we fetch images via ajax we need to call this once the images are loaded
+    initTimeAgo(); 
+    //if we fetch images via ajax we need to call this once the images are loaded
+    initMasonry();
 
     if (!loggedin) {
         initSideForms();
@@ -197,17 +216,8 @@ jQuery(document).ready(function() {
 
     if (loggedin) {
         initUploadForm();
-
-        jQuery('#image-comment').keyup(function() {
-            var len = this.value.length;
-            if (len >= 140) {
-                this.value = this.value.substring(0, 140);
-            }
-            var charsLeft = 140 - len;
-            jQuery('#charsLeft').text('(' + charsLeft + ')');
-        });
-
-        jQuery("button.like").live('click', likeImage);
+        initCommentField();
+        enableLikeButtons();
 
         //user profile actions
         if (typeof profileUser !== "undefined") {
