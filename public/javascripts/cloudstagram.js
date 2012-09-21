@@ -126,6 +126,23 @@ function initInstanceInfoTooltip() {
     jQuery('#instance-tooltip').tooltip();
 }
 
+/**
+ * Swaps from the Login/Register forms.
+ */
+function swapSideForms(action) {
+    var hide = action == 'login' ? 'register' : 'login';
+    var toHide = jQuery('#' + hide + '-form');
+    var toShow = jQuery('#' + action + '-form');
+    
+    if (!toHide.hasClass('hidden')) {
+        toHide.addClass('hidden');
+    }
+    
+    if (toShow.hasClass('hidden')) {
+        toShow.removeClass('hidden');
+    }        
+}
+
 jQuery(document).ready(function() {
 
     initTimeAgo();
@@ -135,18 +152,7 @@ jQuery(document).ready(function() {
     if (!loggedin) {
         jQuery('.show-form').click(function (event) {
             var elem = jQuery(event.target);
-            var action = elem.attr('href').substring(1);
-            var hide = action == 'login' ? 'register' : 'login';
-            var toHide = jQuery('#' + hide + '-form');
-            var toShow = jQuery('#' + action + '-form');
-            
-            if (!toHide.hasClass('hidden')) {
-                toHide.addClass('hidden');
-            }
-
-            if (toShow.hasClass('hidden')) {
-                toShow.removeClass('hidden');
-            }
+            swapSideForms(elem.attr('href').substring(1));
             event.preventDefault();
         });
     }
