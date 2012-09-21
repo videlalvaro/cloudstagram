@@ -126,6 +126,14 @@ function initInstanceInfoTooltip() {
     jQuery('#instance-tooltip').tooltip();
 }
 
+function initSideForms() {
+    jQuery('.show-form').click(function (event) {
+        var elem = jQuery(event.target);
+        swapSideForms(elem.attr('href').substring(1));
+        event.preventDefault();
+    });
+}
+
 /**
  * Swaps from the Login/Register forms.
  */
@@ -150,11 +158,7 @@ jQuery(document).ready(function() {
     initInstanceInfoTooltip();
 
     if (!loggedin) {
-        jQuery('.show-form').click(function (event) {
-            var elem = jQuery(event.target);
-            swapSideForms(elem.attr('href').substring(1));
-            event.preventDefault();
-        });
+        initSideForms();
     }
 
     if (loggedin) {
