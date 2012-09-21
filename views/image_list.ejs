@@ -4,12 +4,12 @@
   <% var image = JSON.parse(image); %>
   <%-
      ejs.render(imageBoxTemplate, {
-     image: image,
-     data: data,
-     usernamelink: usernamelink,
-     i: i,
-     loggedin: loggedin(username),
-     loggedinuser: username
+       image: image,
+       data: data,
+       usernamelink: usernamelink,
+       i: i,
+       loggedin: loggedin(username),
+       loggedinuser: username
      })
    %>
   <% }) %>
