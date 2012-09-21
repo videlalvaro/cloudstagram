@@ -118,16 +118,19 @@ function handleNewPic(imgData) {
     }
 }
 
+/**
+ * This tooltip displays which Cloud Foundry 
+ * instance is serving our request
+ */
+function initInstanceInfoTooltip() {
+    jQuery('#instance-tooltip').tooltip();
+}
+
 jQuery(document).ready(function() {
 
     initTimeAgo();
     initMasonry();
-
-    jQuery('#instance-tooltip').tooltip();
-
-    jQuery("button.close").click(function (event) {
-        jQuery(event.target).parent().remove();
-    });
+    initInstanceInfoTooltip();
 
     if (!loggedin) {
         jQuery('.show-form').click(function (event) {
