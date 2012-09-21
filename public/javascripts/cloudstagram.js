@@ -108,7 +108,7 @@ function handleNewPic(imgData) {
     };
 
     // We do it this way so we can cache the template.
-    //TODO fade away the upload confirmation since we don't need it now that 
+    // TODO: fade away the upload confirmation since we don't need it now that 
     // we display the actual image
     if (imageBoxTemplate) {
         renderImage(imageBoxTemplate, templateOptions);

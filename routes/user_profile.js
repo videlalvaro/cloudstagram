@@ -20,6 +20,7 @@ exports.profile = function(req, res) {
             usernamelink: view_helpers.usernamelink,
             loggedin: view_helpers.loggedin,
             loggedinuser: view_helpers.getLoggedinUser(username),
+            //this is the template as a string
             imageBoxTemplate: view_helpers.getImageBoxTemplate(),
             ejs: ejs
         });
