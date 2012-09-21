@@ -151,6 +151,40 @@ function swapSideForms(action) {
     }        
 }
 
+function initUploadForm() {
+    jQuery('#upload-form').ajaxForm({
+        beforeSubmit: function (){
+            jQuery('#file-upload-error').addClass('hidden');
+            jQuery("#file-control-group").removeClass('error');
+            if (jQuery("input:file").val() == "") {
+                jQuery("#file-control-group").addClass('error');
+                jQuery("#file-error-message").removeClass('hidden');
+                return false;
+            }
+            
+            jQuery('#upload-button').attr('disabled', 'disabled');
+            return true;
+        },
+        success: function (data, statusText) {
+            console.log('statusText: ', statusText);
+            var parts = data.split('|');
+
+            notifyUploadResult(parts[2], parts[0], parts[1]);
+        },
+        error: function(response, status, err){
+            var parts = response.responseText.split('|');
+            if (parts.length == 3) {
+                //if known error use info from server
+                notifyUploadResult(parts[2], parts[0], parts[1]);
+            } else {
+                notifyUploadResult('upload-error', 'error', 
+                                   'There was an error while uploading your picture. '
+                                   + 'Please try again later.');    
+            }
+        }
+    });
+}
+
 jQuery(document).ready(function() {
 
     initTimeAgo();
@@ -162,37 +196,7 @@ jQuery(document).ready(function() {
     }
 
     if (loggedin) {
-        jQuery('#upload-form').ajaxForm({
-            beforeSubmit: function (){
-                jQuery('#file-upload-error').addClass('hidden');
-                jQuery("#file-control-group").removeClass('error');
-                if (jQuery("input:file").val() == "") {
-                    jQuery("#file-control-group").addClass('error');
-                    jQuery("#file-error-message").removeClass('hidden');
-                    return false;
-                }
-                
-                jQuery('#upload-button').attr('disabled', 'disabled');
-                return true;
-            },
-            success: function (data, statusText) {
-                console.log('statusText: ', statusText);
-                var parts = data.split('|');
-
-                notifyUploadResult(parts[2], parts[0], parts[1]);
-            },
-            error: function(response, status, err){
-                var parts = response.responseText.split('|');
-                if (parts.length == 3) {
-                    //if known error use info from server
-                    notifyUploadResult(parts[2], parts[0], parts[1]);
-                } else {
-                    notifyUploadResult('upload-error', 'error', 
-                                       'There was an error while uploading your picture. '
-                                       + 'Please try again later.');    
-                }
-            }
-        });
+        initUploadForm();
 
         jQuery('#image-comment').keyup(function() {
             var len = this.value.length;
