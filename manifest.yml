@@ -1,20 +1,26 @@
 ---
 applications:
-  .:
-    name: cloudstagram
-    framework:
-      name: node
-      info:
-        mem: 64M
-        description: Node.js Application
-        exec: 
-    url: ${name}.${target-base}
-    mem: 256M
-    instances: 2
-    services:
-      mongodb-ct:
-        type: mongodb
-      rabbitmq-ct:
-        type: rabbitmq
-      redis-ct:
-        type: redis
+- name: cloudstagram
+  command: node app.js
+  env:
+      NODE_ENV: production
+  memory: 256M
+  instances: 1
+  url: cloudstagram.cfapps.io
+  path: .
+  services:
+    rabbitmq-ct:
+      label: cloudamqp
+      provider: cloudamqp
+      version: n/a
+      plan: lemur
+    mongodb-ct:
+      label: mongolab
+      provider: mongolab
+      version: n/a
+      plan: sandbox
+    redis-ct:
+      label: rediscloud
+      provider: garantiadata
+      version: n/a
+      plan: 20mb
