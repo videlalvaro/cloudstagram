@@ -29,6 +29,16 @@ function ISODateString(d) {
         + pad(d.getUTCSeconds())+'Z';
 }
 
+function makeJsonImage(username, filename, comment, mimeType) {
+    return fileData = {
+        userid: username, 
+        filename: filename,
+        comment: comment,
+        uploaded: ISODateString(new Date()),
+        mime: mimeType
+    };
+}
+
 /*
  * POST handles image upload
  */
@@ -53,13 +63,7 @@ exports.upload = function(req, res, next) {
             var response = "error|There was an error uploading your image.|upload-" + filename;
             var code = 500;
         } else {
-            var fileData = {
-                userid: username, 
-                filename: filename,
-                comment: comment,
-                uploaded: ISODateString(new Date()),
-                mime: mimeType
-            };
+            var fileData = makeJsonImage(username, filename, comment, mimeType);
             thumper.publishMessage('cloudstagram-upload', fileData, '');
             delete req.session.upload_error;
             var response = "success|The image was uploaded succesfully "
@@ -71,3 +75,25 @@ exports.upload = function(req, res, next) {
         res.send(response, code);
     });    
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
