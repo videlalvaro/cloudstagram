@@ -2,12 +2,15 @@
     "name": "cloudstagram"
     , "version": "0.0.1"
     , "private": true
+    , "engines": {
+        "node": "0.6.x"
+    }
     , "dependencies": {
         "express": "2.5.8"
         , "ejs": ""
         , "mime": ""
         , "http-status": ""
-        , "redis": ""
+        , "redis": "0.8.4"
         , "connect-redis": ""
         , "node-uuid": ""
         , "amqp": ">= 0.1.0"
