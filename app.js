@@ -20,6 +20,7 @@ var express = require('express')
 , ejs = require('ejs')
 ;
 
+// hack for Image Magick to work on CF app instance
 process.env.MAGICK_TMPDIR = __dirname + '/tmp';
 
 var app = module.exports = express.createServer();
