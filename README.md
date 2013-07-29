@@ -84,10 +84,6 @@ The app requires that you bind the following services:
 - Redis
 - RabbitMQ
 
-The app uses the following node.js runtime:
-
-`--runtime=node06`
-
 To push the app to Cloud Foundry type:
 
 ```bash
@@ -95,9 +91,9 @@ To push the app to Cloud Foundry type:
 ```
 
 ## NOTE ##
-    
+
 This project is by no means affiliated with Instagram.
 
 ## License ##
-    
+
 See LICENSE.md
